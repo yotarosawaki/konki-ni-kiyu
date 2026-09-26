@@ -261,7 +261,7 @@ const LOCS = {
           love('yui', 1); G.f.metYui = true; return;
         }
         if (c === 2 && once('yu2')) { face('yui', 's'); await say('ユイ「あ、いらっしゃいませ。最近 よく 来て くれますね」', '……覚えられている。'); return; }
-        if (c === 3 && once('yu3')) { face('yui', 's'); await say('ユイ「いつか、自分の お店を 持ちたいんです」', 'ユイ「新橋の ガード下で。……疲れた 人が、ほっと できる ところ」'); G.f.yuiNorth = true; return; }
+        if (c === 3 && once('yu3')) { face('yui', 's'); await say('ユイ「いつか、自分の お店を 持ちたいんです」', 'ユイ「新橋の ガード下で。……疲れた 人が、ほっと できる ところ」'); G.f.yuiShop = true; return; }
         if (c === 4 && once('yu4')) { face('yui', 's'); await say('ユイ「夏限定の 深煎り ブレンド、おいしい ですよ。新橋の 焙煎所から 取り寄せ なんです」'); return; }
         if (c === 5) {
           face('yui', 'n');

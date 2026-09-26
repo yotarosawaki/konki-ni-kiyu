@@ -211,11 +211,6 @@ const BG = {
     }
     R(0, 102, W, 26, C.d); for (let x = 0; x < W; x += 20) R(x, 114, 10, 1, C.g);
   },
-  sea() {
-    D(0, 0, W, 60, C.G, C.w); R(0, 60, W, 68, C.navy);
-    const r = rng(19); for (let i = 0; i < 14; i++) { const x = r() * W, y = 64 + r() * 60, w = 12 + r() * 24; R(x, y, w, 4, C.w); R(x + 2, y + 4, w - 4, 2, C.sky); }
-    R(0, 58, W, 3, C.G);
-  },
   title() {
     R(0, 0, W, H, C.dnavy); stars(40, 0, 0, W, 60, 99); E(160, 20, 7, 7, C.YL); E(163, 18, 6, 6, C.dnavy);
     skyline(104, 57, C.k, C.yl); R(0, 104, W, 24, C.d);
