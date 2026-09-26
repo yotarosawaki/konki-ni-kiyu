@@ -4,7 +4,7 @@
 // 送るのは、ページの表示と、下の track() で決めた操作だけ。名前などの個人情報は扱わない。
 'use strict';
 (function () {
-  var GA_ID = '';
+  var GA_ID = 'G-PXVLNR5XBK';
   var HOSTS = ['yotarosawaki.github.io'];
 
   window.track = function () { };
