@@ -44,16 +44,17 @@
   #cmds { display: grid; grid-template-columns: 1fr; gap: 2px; }
   #cmds.two { grid-template-columns: 1fr 1fr; }
   #choices { display: grid; gap: 2px; margin-top: 8px; }
-  li button {
+  li button, li a.ext {
     all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer;
     padding: 3px 4px 3px 22px; position: relative; color: var(--fg); font: inherit; line-height: 1.45;
   }
-  li button::before { content: "▶"; position: absolute; left: 3px; top: 3px; color: var(--red); visibility: hidden; font-size: .9em; }
-  li button.cur::before { visibility: visible; animation: blink .8s steps(1) infinite; }
-  li button.cur { color: var(--gold); }
+  li button::before, li a.ext::before { content: "▶"; position: absolute; left: 3px; top: 3px; color: var(--red); visibility: hidden; font-size: .9em; }
+  li button.cur::before, li a.ext.cur::before { visibility: visible; animation: blink .8s steps(1) infinite; }
+  li button.cur, li a.ext.cur { color: var(--gold); }
+  li a.ext { text-decoration: underline; text-underline-offset: 4px; }
   li button.back { color: var(--dim); }
   li button.back.cur { color: var(--gold); }
-  li button:focus-visible { outline: 2px dashed var(--sky); outline-offset: -2px; }
+  li button:focus-visible, li a.ext:focus-visible { outline: 2px dashed var(--sky); outline-offset: -2px; }
   #msgwin { min-height: 9.5em; cursor: pointer; }
   #msgtext { white-space: pre-wrap; word-break: break-all; margin: 0; min-height: 3.3em; }
   #more { position: absolute; right: 16px; bottom: 8px; color: var(--fg); animation: blink .7s steps(1) infinite; }

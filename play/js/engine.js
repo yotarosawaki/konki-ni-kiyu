@@ -82,7 +82,7 @@ async function say(...pages) {
   for (const p of pages.flat()) { await typeText(p); await waitAdvance(); }
 }
 function renderMenu() {
-  IN.ul.querySelectorAll('button').forEach((b, i) => b.classList.toggle('cur', i === IN.idx));
+  IN.ul.querySelectorAll('button, a').forEach((b, i) => b.classList.toggle('cur', i === IN.idx));
 }
 function menu(items, opt = {}) {
   const ul = opt.inMsg ? $('choices') : $('cmds');
@@ -90,10 +90,14 @@ function menu(items, opt = {}) {
   ul.innerHTML = '';
   const list = items.slice(); if (opt.cancel) list.push('もどる');
   list.forEach((t, i) => {
-    const li = document.createElement('li'); const b = document.createElement('button');
-    b.type = 'button'; b.textContent = t; if (opt.cancel && i === list.length - 1) b.classList.add('back');
+    const li = document.createElement('li');
+    const href = opt.links && opt.links[i];
+    const b = document.createElement(href ? 'a' : 'button');
+    if (href) { b.href = href; b.target = '_blank'; b.rel = 'noopener noreferrer'; b.classList.add('ext'); }
+    else b.type = 'button';
+    b.textContent = t; if (opt.cancel && i === list.length - 1) b.classList.add('back');
     b.addEventListener('mouseenter', () => { IN.idx = i; renderMenu(); });
-    b.addEventListener('click', e => { e.stopPropagation(); auInit(); IN.idx = i; choose(); });
+    b.addEventListener('click', e => { e.stopPropagation(); auInit(); if (href) { IN.idx = i; renderMenu(); return; } IN.idx = i; choose(); });
     li.appendChild(b); ul.appendChild(li);
   });
   ul.classList.toggle('two', !!opt.two);
@@ -107,7 +111,11 @@ function menu(items, opt = {}) {
     };
   });
 }
-function choose() { if (IN.mode !== 'menu') return; IN.mode = null; SFX.sel(); IN.resolve(IN.idx); }
+function choose() {
+  if (IN.mode !== 'menu') return;
+  const cur = IN.ul.querySelectorAll('button, a')[IN.idx];
+  if (cur && cur.tagName === 'A') { SFX.sel(); cur.click(); return; }
+  IN.mode = null; SFX.sel(); IN.resolve(IN.idx); }
 async function ask(prompt, options, opt = {}) {
   await typeText(prompt);
   return menu(options, Object.assign({ inMsg: true }, opt));
@@ -149,6 +157,29 @@ function has(it) { return G.items.includes(it); }
 function take(it) { G.items = G.items.filter(x => x !== it); }
 function seenEndings() { return (store.get(KEY.end) || []).filter(k => ENDINGS[k]); }
 
+// ---------- 結婚相談所への案内（BAD END の最後）----------
+const CFM_URL = 'https://cf-m.jp/contact';
+const CFM_LINK = id => CFM_URL + '?utm_source=konki&utm_medium=game&utm_campaign=badend&utm_content=' + id;
+async function consult(id) {
+  const gentle = id === 'mental';
+  noface(); BGM.play('cafe');
+  GFX.card('ITエンジニア専門の結婚相談所', 'CODE FOR MARRIAGE');
+  const pages = gentle ? [
+    '（PR）CODE FOR MARRIAGE からの ごあんない',
+    'しんどい ときは、婚活を 休んで いい。急がなくて いい。',
+    '話を 聞いて ほしく なったら、ITエンジニア専門の 結婚相談所「CODE FOR MARRIAGE」の オンライン無料相談 という 手も ある。'
+  ] : [
+    '（PR）CODE FOR MARRIAGE からの ごあんない',
+    '婚活を ひとりで 抱えこむのは、障害対応を ひとりで 抱えこむのと 同じくらい 危ない。',
+    'ITエンジニア専門の 結婚相談所「CODE FOR MARRIAGE」。担当カウンセラーは、元ITエンジニア。仕様書に ない 気持ちも、いっしょに 考えて くれる。'
+  ];
+  await say(...pages);
+  while (true) {
+    const i = await ask('まずは オンライン無料相談から。', ['オンライン無料相談を みる（cf-m.jp）', 'ゲームを おわる'], { links: { 0: CFM_LINK(id) } });
+    if (i === 1) break;
+  }
+}
+
 // ---------- エンディング ----------
 async function END(id) {
   const e = ENDINGS[id];
@@ -161,6 +192,7 @@ async function END(id) {
   await say(...e.text);
   GFX.ending(e.bg || 'street', kind, `No.${e.no}「${e.title}」`);
   await say(`――― ${kind} No.${e.no}「${e.title}」 ―――`, `タツの ひとこと：\n「${e.yasu}」`);
+  if (e.type !== 'true') await consult(id);
   const total = Object.keys(ENDINGS).length;
   await say(`みた エンディング：${seenEndings().length} / ${total}\n\nおわり`);
   G = null;
