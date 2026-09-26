@@ -97,7 +97,7 @@ function menu(items, opt = {}) {
     else b.type = 'button';
     b.textContent = t; if (opt.cancel && i === list.length - 1) b.classList.add('back');
     b.addEventListener('mouseenter', () => { IN.idx = i; renderMenu(); });
-    b.addEventListener('click', e => { e.stopPropagation(); auInit(); if (href) { IN.idx = i; renderMenu(); return; } IN.idx = i; choose(); });
+    b.addEventListener('click', e => { e.stopPropagation(); auInit(); if (href) { IN.idx = i; renderMenu(); if (opt.onLink) opt.onLink(); return; } IN.idx = i; choose(); });
     li.appendChild(b); ul.appendChild(li);
   });
   ul.classList.toggle('two', !!opt.two);
@@ -173,9 +173,10 @@ async function consult(id) {
     '婚活を ひとりで 抱えこむのは、障害対応を ひとりで 抱えこむのと 同じくらい 危ない。',
     'ITエンジニア専門の 結婚相談所「CODE FOR MARRIAGE」。担当カウンセラーは、元ITエンジニア。仕様書に ない 気持ちも、いっしょに 考えて くれる。'
   ];
+  track('consult_view', { ending_id: id });
   await say(...pages);
   while (true) {
-    const i = await ask('まずは オンライン無料相談から。', ['オンライン無料相談を みる（cf-m.jp）', 'ゲームを おわる'], { links: { 0: CFM_LINK(id) } });
+    const i = await ask('まずは オンライン無料相談から。', ['オンライン無料相談を みる（cf-m.jp）', 'ゲームを おわる'], { links: { 0: CFM_LINK(id) }, onLink: () => track('consult_click', { ending_id: id }) });
     if (i === 1) break;
   }
 }
@@ -185,6 +186,7 @@ async function END(id) {
   const e = ENDINGS[id];
   const seen = seenEndings(); if (!seen.includes(id)) { seen.push(id); store.set(KEY.end, seen); }
   const kind = e.type === 'true' ? 'TRUE END' : 'BAD END';
+  track('ending_reached', { ending_id: id, ending_no: e.no, ending_type: e.type === 'true' ? 'true' : 'bad' });
   $('cmdtitle').textContent = ''; $('cmds').innerHTML = '';
   scene(e.bg || 'street');
   BGM.play(e.type === 'true' ? 'true' : 'bad');
@@ -259,6 +261,7 @@ function peopleHere() { const L = LOCS[G.loc]; return L.people ? L.people() : []
 function drawLoc() { const L = LOCS[G.loc]; const ps = peopleHere(); scene(L.bg, ps[0] || null, 'n'); }
 
 async function chapterStart() {
+  track('chapter_start', { chapter: G.ch });
   const c = CH[G.ch];
   $('cmdtitle').textContent = ''; $('cmds').innerHTML = '';
   GFX.card(G.ch === 8 ? '最終章' : `第${G.ch}章`, c.title); BGM.stop(); SFX.chapter(); status();
@@ -366,8 +369,8 @@ async function titleScreen() {
   while (true) {
     const i = await menu(['はじめから', 'つづきから', 'エンディング', 'あそびかた', 'せってい'], { title: 'タイトル' });
     IN.skip = true;
-    if (i === 0) { G = newState(); return play(); }
-    if (i === 1) { if (await loadMenu()) return play(); }
+    if (i === 0) { G = newState(); track('game_start'); return play(); }
+    if (i === 1) { if (await loadMenu()) { track('game_continue', { chapter: G.ch }); return play(); } }
     if (i === 2) await endingList();
     if (i === 3) await howTo();
     if (i === 4) await optMenu();

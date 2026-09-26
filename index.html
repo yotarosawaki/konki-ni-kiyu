@@ -146,6 +146,7 @@
   .final h2 { margin-bottom: 8px; }
   .final p { margin-inline: auto; color: var(--steel); }
   footer a { color: var(--lantern); text-underline-offset: 3px; }
+  footer .privacy { max-width: 36em; margin: 14px auto 0; font-family: var(--body); font-size: 12px; color: var(--steel); }
   footer { text-align: center; color: var(--steel); font-size: 12px; padding-block: 40px 32px; font-family: var(--dot); line-height: 1.9; }
 
   @keyframes blink { 50% { opacity: 0; } }
@@ -180,7 +181,7 @@
     <div class="romaji">KONKI NI KIYU</div>
     <div class="tagline"><span id="typed">33歳、エンジニア。婚活は、障害対応だった。</span><span class="caret">▮</span></div>
     <div class="cta-row">
-      <a class="btn" href="play/">いますぐ あそぶ</a>
+      <a class="btn" href="play/" data-loc="hero">いますぐ あそぶ</a>
     </div>
     <div class="note">無料・ブラウザで すぐ遊べます（PC／スマホ）</div>
   </div>
@@ -347,7 +348,7 @@
   <section class="final" aria-labelledby="h-final">
     <h2 id="h-final">あなたの婚期は、まだ消えていない。</h2>
     <p>……たぶん。</p>
-    <div class="cta-row"><a class="btn" href="play/">いますぐ あそぶ</a></div>
+    <div class="cta-row"><a class="btn" href="play/" data-loc="final">いますぐ あそぶ</a></div>
   </section>
 </main>
 
@@ -355,9 +356,11 @@
   この物語はフィクションです。登場する人物・団体は、実在のものとは関係ありません。<br>
   制作：<a href="https://cf-m.jp/" target="_blank" rel="noopener">CODE FOR MARRIAGE</a>（ITエンジニア専門の結婚相談所）<br>
   © 2026 CodeForMarriage
+  <p class="privacy" data-analytics-note hidden>このサイトでは、利用状況を知るためにGoogleアナリティクスを使っています。閲覧したページや操作の情報が、Cookieなどを通じてGoogleに送られます（名前など個人を特定する情報は含みません）。<a href="https://policies.google.com/technologies/partner-sites?hl=ja" target="_blank" rel="noopener">詳しくはこちら</a></p>
 </footer>
 
 <script>window.SPRITE_BASE = 'play/';</script>
+<script src="play/js/analytics.js"></script>
 <script src="play/js/gfx.js"></script>
 <script>
 (function () {
@@ -413,6 +416,9 @@
     paint(tmp, () => { BG.office(); drawPerson('yasu', 'n'); });
     const tx = tc.getContext('2d'); tx.imageSmoothingEnabled = false; tx.drawImage(tmp, 48, 16, 96, 112, 0, 0, 96, 112);
   };
+  // 計測：遊ぶボタン、御社サイトへのリンク
+  document.querySelectorAll('a.btn[data-loc]').forEach(a => a.addEventListener('click', () => track('play_click', { location: a.dataset.loc })));
+  document.querySelectorAll('footer a[href^="https://cf-m.jp"]').forEach(a => a.addEventListener('click', () => track('company_link_click', { location: 'lp_footer' })));
   Promise.all([document.fonts ? document.fonts.ready : 0, loadSprites()]).then(run, run);
 })();
 </script>
