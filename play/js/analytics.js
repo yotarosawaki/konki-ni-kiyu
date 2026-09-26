@@ -5,7 +5,7 @@
 'use strict';
 (function () {
   var GA_ID = 'G-PXVLNR5XBK';
-  var HOSTS = ['yotarosawaki.github.io', 'konki.cf-m.jp'];
+  var HOSTS = ['yotarosawaki.github.io', 'games.cf-m.jp', 'konki.cf-m.jp'];
 
   window.track = function () { };
   if (!GA_ID || HOSTS.indexOf(location.hostname) < 0) return;
