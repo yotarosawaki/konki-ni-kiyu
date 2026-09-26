@@ -1,108 +1,418 @@
 <!doctype html>
 <html lang="ja">
+<head>
 <meta charset="utf-8">
-<title>婚期に消ゆ</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>婚期に消ゆ</title>
+<meta name="description" content="33歳、エンジニア。婚活は、障害対応だった。8bitレトロゲーム風のコマンド選択式アドベンチャー。エンディング38種、プロポーズ到達率1%想定。ブラウザで無料で遊べます。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="婚期に消ゆ">
+<meta property="og:description" content="33歳、エンジニア。婚活は、障害対応だった。エンディング38種、プロポーズ到達率1%想定の8bitアドベンチャー。">
+<meta property="og:url" content="https://yotarosawaki.github.io/konki-ni-kiyu/">
+<meta property="og:image" content="https://yotarosawaki.github.io/konki-ni-kiyu/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
 <style>
-  /* 8bitゲームの画面は黒一色の世界。テーマ切替は持たず、色はすべて明示する */
+  /* 夜の8bit世界ひとつに決めたデザイン。色はすべてここで明示する */
   :root {
     color-scheme: dark;
-    --bg: #000000;
-    --fg: #fcfcfc;
-    --dim: #7c7c7c;
-    --gold: #f8b800;
-    --red: #f83800;
-    --sky: #3cbcfc;
-    --win: #000000;
-    --font: "DotGothic16", "MS Gothic", "Osaka-Mono", monospace;
+    --night: #0b0c2c;
+    --ink: #05051a;
+    --paper: #fcfcfc;
+    --lantern: #f8b800;
+    --signal: #f83800;
+    --blush: #f878f8;
+    --steel: #a3a8cc;
+    --dot: "DotGothic16", "MS Gothic", monospace;
+    --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
-  html, body { height: 100%; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    margin: 0; background: var(--bg); color: var(--fg);
-    font-family: var(--font); font-size: 17px; line-height: 1.65;
-    padding: 0 16px; -webkit-font-smoothing: none;
+    margin: 0; background: var(--night); color: var(--paper);
+    font-family: var(--body); font-size: 16px; line-height: 1.9;
   }
-  #app {
-    max-width: 800px; margin: 0 auto; padding-block: 16px 24px;
-    display: flex; flex-direction: column; gap: 10px;
-  }
+  a { color: inherit; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding-inline: 16px; }
+  canvas.px { display: block; width: 100%; max-width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+  /* ゲームと同じ白い二重枠のウィンドウ */
   .win {
-    background: var(--win); border: 3px solid var(--fg); border-radius: 8px;
-    box-shadow: inset 0 0 0 3px var(--win), inset 0 0 0 5px var(--fg);
-    padding: 12px 14px; position: relative;
+    background: var(--ink); border: 3px solid var(--paper); border-radius: 8px;
+    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper);
+    padding: 22px 24px; position: relative;
   }
-  #top { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 10px; }
-  #cmds.two li button { padding-left: 18px; white-space: nowrap; }
-  #picwin { padding: 9px; overflow: hidden; cursor: pointer; }
-  #pic { display: block; width: 100%; max-width: 100%; aspect-ratio: 3 / 2; image-rendering: pixelated; image-rendering: crisp-edges; background: #000; }
-  #cmdwin { display: flex; flex-direction: column; gap: 6px; }
-  #cmdtitle { color: var(--gold); font-size: 14px; letter-spacing: .1em; min-height: 1.4em; }
-  ul { list-style: none; margin: 0; padding: 0; }
-  #cmds { display: grid; grid-template-columns: 1fr; gap: 2px; }
-  #cmds.two { grid-template-columns: 1fr 1fr; }
-  #choices { display: grid; gap: 2px; margin-top: 8px; }
-  li button {
-    all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer;
-    padding: 3px 4px 3px 22px; position: relative; color: var(--fg); font: inherit; line-height: 1.45;
+  .label { font-family: var(--dot); color: var(--lantern); letter-spacing: .12em; font-size: 14px; margin: 0 0 6px; }
+  h2, p, .msg, .quotes li, .line { word-break: auto-phrase; }
+  h2 { font-family: var(--dot); font-weight: 400; font-size: clamp(26px, 4.6vw, 40px); line-height: 1.3; margin: 0 0 18px; text-wrap: balance; }
+  h3 { font-family: var(--dot); font-weight: 400; font-size: 21px; margin: 0; }
+  p { margin: 0 0 1em; max-width: 38em; }
+  section { padding-block: 72px 0; }
+
+  /* ---------- ヒーロー ---------- */
+  .hero { position: relative; background: var(--ink); border-bottom: 4px solid var(--paper); overflow: hidden; }
+  .hero canvas { width: 100%; aspect-ratio: 3 / 2; max-height: 86vh; object-fit: cover; }
+  .hero-copy {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: clamp(18px, 6vw, 64px) 16px 16px; text-align: center; gap: 10px;
   }
-  li button::before { content: "▶"; position: absolute; left: 3px; top: 3px; color: var(--red); visibility: hidden; font-size: .9em; }
-  li button.cur::before { visibility: visible; animation: blink .8s steps(1) infinite; }
-  li button.cur { color: var(--gold); }
-  li button.back { color: var(--dim); }
-  li button.back.cur { color: var(--gold); }
-  li button:focus-visible { outline: 2px dashed var(--sky); outline-offset: -2px; }
-  #msgwin { min-height: 9.5em; cursor: pointer; }
-  #msgtext { white-space: pre-wrap; word-break: break-all; margin: 0; min-height: 3.3em; }
-  #more { position: absolute; right: 16px; bottom: 8px; color: var(--fg); animation: blink .7s steps(1) infinite; }
-  #status {
-    display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; color: var(--dim);
-    min-height: 1.5em; padding-inline: 4px; font-variant-numeric: tabular-nums;
+  .logo {
+    font-family: var(--dot); font-weight: 400; margin: 0; line-height: 1.05;
+    font-size: clamp(52px, 13vw, 132px); letter-spacing: .04em;
+    text-shadow: 4px 4px 0 var(--signal), 8px 8px 0 var(--ink);
   }
-  .st-heart { color: #f878f8; }
-  .pop {
-    position: absolute; left: 50%; top: 14px; transform: translateX(-50%);
-    background: #000; border: 2px solid var(--fg); padding: 2px 10px; font-size: 14px; white-space: nowrap;
-    animation: pop 1.6s steps(8) forwards; pointer-events: none;
+  .romaji { font-family: var(--dot); color: var(--lantern); letter-spacing: .5em; font-size: clamp(11px, 1.8vw, 15px); margin-right: -.5em; }
+  .tagline {
+    font-family: var(--dot); font-size: clamp(15px, 2.6vw, 22px); background: rgba(5, 5, 26, .82);
+    padding: 6px 14px; min-height: 2.2em; margin-top: clamp(4px, 2vw, 18px);
   }
-  .pop.neg { color: #f878f8; } .pop.pos { color: #58d854; }
-  #foot { color: var(--dim); font-size: 12px; text-align: center; }
+  .caret { display: inline-block; width: .55em; color: var(--lantern); animation: blink .8s steps(1) infinite; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 14px; }
+  .btn {
+    font-family: var(--dot); font-size: clamp(18px, 2.6vw, 22px); text-decoration: none; color: var(--paper);
+    background: var(--ink); border: 3px solid var(--paper); border-radius: 8px;
+    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper), 5px 5px 0 var(--signal);
+    padding: 14px 26px 14px 44px; position: relative; display: inline-block; transition: transform .08s steps(2);
+  }
+  .btn::before { content: "▶"; position: absolute; left: 18px; color: var(--signal); animation: blink .8s steps(1) infinite; }
+  .btn:hover, .btn:focus-visible { transform: translate(-2px, -2px); color: var(--lantern); outline: none; box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper), 7px 7px 0 var(--signal); }
+  .btn.sub { box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper); }
+  .btn.sub::before { color: var(--steel); }
+  .note { font-family: var(--dot); color: var(--steel); font-size: 13px; background: rgba(5, 5, 26, .82); padding: 2px 10px; }
+
+  /* ---------- 数字 ---------- */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 40px; }
+  .stat { text-align: center; padding: 18px 10px; }
+  .stat b { display: block; font-family: var(--dot); font-weight: 400; font-size: clamp(30px, 5vw, 46px); line-height: 1.1; color: var(--lantern); font-variant-numeric: tabular-nums; }
+  .stat b.pink { color: var(--blush); }
+  .stat span { font-family: var(--dot); font-size: 14px; color: var(--steel); }
+
+  /* ---------- あらすじ ---------- */
+  .story { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; }
+  .scene { padding: 9px; }
+  .msg { font-family: var(--dot); font-size: 17px; line-height: 1.75; margin-top: 12px; min-height: 6.5em; }
+  .msg p { margin: 0; }
+
+  /* ---------- ヒロイン ---------- */
+  .cast { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .card { padding: 9px 9px 14px; display: flex; flex-direction: column; gap: 10px; cursor: default; }
+  .card canvas { border-radius: 2px; }
+  .card h3 { font-size: 22px; display: flex; align-items: baseline; gap: 8px; padding-inline: 6px; }
+  .card h3 small { font-size: 13px; color: var(--steel); }
+  .card .job { font-family: var(--dot); font-size: 13px; color: var(--lantern); padding-inline: 6px; margin: -6px 0 0; }
+  .card .line { font-size: 14px; line-height: 1.7; padding-inline: 6px; margin: 0; color: #dfe1f2; }
+  .card.main { border-color: var(--blush); box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--blush); }
+  .hint { font-family: var(--dot); color: var(--steel); font-size: 13px; margin-top: 12px; }
+
+  /* ---------- しくみ ---------- */
+  .sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .sys .win { padding: 18px 20px; }
+  .sys h3 { color: var(--lantern); margin-bottom: 8px; }
+  .sys p { font-size: 15px; margin: 0; }
+  .cmds { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; font-family: var(--dot); margin: 0 0 12px; padding: 0; list-style: none; font-size: 16px; }
+  .cmds li { padding-left: 20px; position: relative; }
+  .cmds li.on { color: var(--lantern); }
+  .cmds li.on::before { content: "▶"; position: absolute; left: 0; color: var(--signal); font-size: .85em; top: .15em; animation: blink .8s steps(1) infinite; }
+
+  /* ---------- すっぱいブドウ ---------- */
+  .sour { display: grid; grid-template-columns: 1fr 1.15fr; gap: 28px; align-items: center; }
+  .choices { list-style: none; padding: 0; margin: 12px 0 0; font-family: var(--dot); font-size: 16px; display: grid; gap: 4px; }
+  .choices li { padding-left: 22px; position: relative; }
+  .choices li.on { color: var(--lantern); }
+  .choices li.on::before { content: "▶"; position: absolute; left: 0; color: var(--signal); font-size: .85em; top: .2em; animation: blink .8s steps(1) infinite; }
+  .choices li.trap::after { content: " → 婚活終了"; color: var(--signal); font-size: 13px; }
+
+  /* ---------- エンディング ---------- */
+  .ends { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 18px; padding: 0; list-style: none; }
+  .ends li { font-family: var(--dot); font-size: 15px; border: 2px solid var(--steel); padding: 3px 10px; border-radius: 3px; }
+  .ends li em { font-style: normal; color: var(--signal); margin-right: 6px; font-size: 12px; }
+  .ends li.q { color: var(--steel); border-style: dashed; }
+  .ends li.true { border-color: var(--lantern); color: var(--lantern); }
+
+  /* ---------- タツ ---------- */
+  .tatsu { display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: center; }
+  .quotes { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .quotes li { font-family: var(--dot); font-size: clamp(16px, 2.2vw, 19px); line-height: 1.6; }
+  .quotes li::before { content: "タツ「"; color: var(--lantern); }
+  .quotes li::after { content: "」"; color: var(--lantern); }
+
+  /* ---------- 遊び方・最後のCTA ---------- */
+  .spec { display: grid; grid-template-columns: max-content 1fr; gap: 8px 22px; margin: 0; font-size: 15px; }
+  .spec dt { font-family: var(--dot); color: var(--lantern); }
+  .spec dd { margin: 0; }
+  .final { text-align: center; padding-block: 80px 24px; }
+  .final h2 { margin-bottom: 8px; }
+  .final p { margin-inline: auto; color: var(--steel); }
+  footer { text-align: center; color: var(--steel); font-size: 12px; padding-block: 40px 32px; font-family: var(--dot); line-height: 1.9; }
+
   @keyframes blink { 50% { opacity: 0; } }
-  @keyframes pop { 0% { opacity: 0; top: 24px; } 15% { opacity: 1; top: 14px; } 80% { opacity: 1; } 100% { opacity: 0; top: 6px; } }
-  @media (max-width: 620px) {
+  @media (max-width: 860px) {
+    .cast { grid-template-columns: repeat(3, 1fr); }
+    .sys { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
     body { font-size: 15px; }
-    #top { grid-template-columns: 1fr; }
-    #cmdwin { padding: 8px 10px; }
-    #cmds { grid-template-columns: 1fr 1fr; }
-    #cmds.two { grid-template-columns: 1fr 1fr; }
-    #msgwin { min-height: 10.5em; }
+    .tagline { font-size: 13.5px; padding: 6px 10px; }
+    .hero canvas { aspect-ratio: 3 / 4; max-height: none; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .story, .sour, .tatsu { grid-template-columns: 1fr; }
+    .tatsu canvas { max-width: 200px; }
+    .cast { grid-template-columns: 1fr 1fr; }
+    .card.main { grid-column: 1 / -1; }
+    .win { padding: 18px 16px; }
+    section { padding-block: 56px 0; }
   }
   @media (prefers-reduced-motion: reduce) {
-    li button.cur::before, #more { animation: none; }
-    .pop { animation-timing-function: linear; }
+    .caret, .btn::before, .cmds li.on::before, .choices li.on::before { animation: none; }
+    html { scroll-behavior: auto; }
   }
 </style>
+</head>
+<body>
 
-<div id="app">
-  <div id="top">
-    <div class="win" id="picwin"><canvas id="pic" width="192" height="128" aria-label="ゲーム画面"></canvas></div>
-    <div class="win" id="cmdwin">
-      <div id="cmdtitle"></div>
-      <ul id="cmds"></ul>
+<header class="hero">
+  <canvas class="px" id="heroCv" width="192" height="128" aria-hidden="true"></canvas>
+  <div class="hero-copy">
+    <h1 class="logo">婚期に消ゆ</h1>
+    <div class="romaji">KONKI NI KIYU</div>
+    <div class="tagline"><span id="typed">33歳、エンジニア。婚活は、障害対応だった。</span><span class="caret">▮</span></div>
+    <div class="cta-row">
+      <a class="btn" href="play/">いますぐ あそぶ</a>
     </div>
+    <div class="note">無料・ブラウザで すぐ遊べます（PC／スマホ）</div>
   </div>
-  <div class="win" id="msgwin" aria-live="polite">
-    <p id="msgtext"></p>
-    <ul id="choices"></ul>
-    <span id="more" hidden>▼</span>
-  </div>
-  <div id="status"></div>
-  <div id="foot">クリック／タップ・↑↓・Enter で すすむ　Esc で もどる</div>
-</div>
+</header>
 
-<script src="js/gfx.js"></script>
-<script src="js/story.js"></script>
-<script src="js/bgm.js"></script>
-<script src="js/engine.js"></script>
+<main class="wrap">
+
+  <div class="stats">
+    <div class="win stat"><b class="pink">1%</b><span>プロポーズ到達率（想定）</span></div>
+    <div class="win stat"><b>38</b><span>エンディング</span></div>
+    <div class="win stat"><b>約1時間</b><span>1周のプレイ時間</span></div>
+    <div class="win stat"><b>7回</b><span>すっぱいブドウ</span></div>
+  </div>
+
+  <section id="story" aria-labelledby="h-story">
+    <div class="story">
+      <div class="win scene">
+        <canvas class="px" id="storyCv" width="192" height="128" aria-label="主人公の部屋"></canvas>
+        <div class="msg" id="storyMsg" aria-live="polite"><p>今日は、オレの誕生日だ。<br>ケーキのかわりに、コンビニのプリンを食べた。</p></div>
+      </div>
+      <div>
+        <p class="label">STORY</p>
+        <h2 id="h-story">「あんたは？」<br>母のLINEが、すべての始まりだった。</h2>
+        <p>川崎の1K。モニター3枚。枯れた観葉植物。33歳のバックエンドエンジニア「オレ」は、仕事に明け暮れているうちに、同期も後輩も親戚も、みんな先に行ってしまったことに気づく。</p>
+        <p>マッチングアプリ、ジム、同窓会、そして職場。町で出会う5人の女性と少しずつ距離を縮め、クリスマスイブのプロポーズを目指す。</p>
+        <p>ただし、この物語は基本的に報われない。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="cast" aria-labelledby="h-cast">
+    <p class="label">CAST</p>
+    <h2 id="h-cast">町と職場で出会う、5人の女性</h2>
+    <div class="cast">
+      <article class="win card main" data-id="shiori" data-bg="library">
+        <canvas class="px" width="192" height="128" aria-label="シオリ"></canvas>
+        <h3>シオリ <small>33歳</small></h3>
+        <p class="job">区立図書館の司書</p>
+        <p class="line">中学の図書委員仲間。無口で、押し花のしおりを手作りしている。</p>
+      </article>
+      <article class="win card" data-id="misaki" data-bg="office">
+        <canvas class="px" width="192" height="128" aria-label="ミサキ"></canvas>
+        <h3>ミサキ <small>28歳</small></h3>
+        <p class="job">会社の後輩デザイナー</p>
+        <p class="line">社内でいちばん明るい。「先輩みたいな人と結婚する人は、幸せですよ〜」</p>
+      </article>
+      <article class="win card" data-id="yui" data-bg="cafe">
+        <canvas class="px" width="192" height="128" aria-label="ユイ"></canvas>
+        <h3>ユイ <small>31歳</small></h3>
+        <p class="job">駅前カフェの店員</p>
+        <p class="line">3年通って、はじめて「いつものブレンドですか？」と言われた。</p>
+      </article>
+      <article class="win card" data-id="reiko" data-bg="lounge">
+        <canvas class="px" width="192" height="128" aria-label="レイコ"></canvas>
+        <h3>レイコ <small>35歳</small></h3>
+        <p class="job">外資系コンサル</p>
+        <p class="line">アプリで出会う。「時間がもったいないので、早速始めましょう」。デートは面接だ。</p>
+      </article>
+      <article class="win card" data-id="haruka" data-bg="gym">
+        <canvas class="px" width="192" height="128" aria-label="ハルカ"></canvas>
+        <h3>ハルカ <small>26歳</small></h3>
+        <p class="job">ジムのトレーナー</p>
+        <p class="line">声も笑顔もでかい。LINE交換があまりにあっさりで、逆に不安になった。</p>
+      </article>
+    </div>
+    <p class="hint">カードにカーソルを合わせる（スマホはタップ）と、表情が変わります。</p>
+  </section>
+
+  <section id="system" aria-labelledby="h-system">
+    <p class="label">SYSTEM</p>
+    <h2 id="h-system">懐かしくて、容赦がない</h2>
+    <div class="sys">
+      <div class="win">
+        <ul class="cmds" aria-hidden="true"><li>いどう</li><li class="on">はなす</li><li>みる</li><li>しらべる</li><li>もちもの</li><li>スマホ</li></ul>
+        <h3>コマンド選択式</h3>
+        <p>80年代の推理アドベンチャーと同じ操作です。同じ人に何度も話しかけ、気になるものは調べる。見落とした一言が、半年後の結末を変えます。</p>
+      </div>
+      <div class="win">
+        <h3>38のエンディング</h3>
+        <p>告白する相手、断る勇気、仕事との向き合い方。選択のひとつひとつが分岐になります。ほとんどはバッドエンドです。見たエンディングはタイトル画面で確認できます。</p>
+      </div>
+      <div class="win">
+        <h3>いつでも中断できる</h3>
+        <p>「きろく」コマンドで3か所までセーブできます。1周はおよそ1時間。通勤電車でも、寝る前の布団の中でも、少しずつ進められます。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sour" aria-labelledby="h-sour">
+    <div class="sour">
+      <div>
+        <p class="label">SOUR GRAPES</p>
+        <h2 id="h-sour">「すっぱいブドウの じかん」が、やってくる</h2>
+        <p>手の届かないブドウを見て「どうせ酸っぱい」と言い捨てたキツネの話。うまくいかない夜、主人公の心にはもっともらしい言いわけが浮かびます。</p>
+        <p>章が進むほど、言いわけは増え、正しそうに聞こえてきます。「いったん自分磨きに専念しよう」。乗った瞬間、婚活は終わります。</p>
+      </div>
+      <div class="win scene">
+        <canvas class="px" id="sourCv" width="192" height="128" aria-label="ブドウを見上げるキツネ"></canvas>
+        <div class="msg">
+          <p>（こころの こえが する）</p>
+          <ul class="choices">
+            <li class="trap">けっこんは コスパが わるい。やめよう</li>
+            <li class="trap">ねこを かおう。ねこは うらぎらない</li>
+            <li class="on">……まだ、なつの においが のこっている</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="endings" aria-labelledby="h-endings">
+    <div class="win">
+      <p class="label">ENDINGS</p>
+      <h2 id="h-endings">ほとんどの婚活は、こうして終わる</h2>
+      <ul class="ends">
+        <li><em>BAD</em>コスパ最強</li>
+        <li><em>BAD</em>筋肉は裏切らない</li>
+        <li><em>BAD</em>猫は裏切らない</li>
+        <li><em>BAD</em>自分磨き</li>
+        <li><em>BAD</em>AIの彼女</li>
+        <li><em>BAD</em>新橋に消ゆ</li>
+        <li><em>BAD</em>契約結婚</li>
+        <li><em>BAD</em>聖夜の障害対応</li>
+        <li><em>BAD</em>504 Gateway Timeout</li>
+        <li class="q">？？？？？？</li>
+        <li class="q">？？？？？？</li>
+        <li class="true">TRUE END ― ひとつだけ</li>
+      </ul>
+      <p>タイトルを見ただけで、だいたい何があったかは想像がつくはずです。それでも、見るとちょっと刺さります。</p>
+    </div>
+  </section>
+
+  <section id="tatsu" aria-labelledby="h-tatsu">
+    <div class="tatsu">
+      <div class="win scene"><canvas class="px" id="tatsuCv" width="96" height="112" aria-label="相棒のタツ"></canvas></div>
+      <div>
+        <p class="label">PARTNER</p>
+        <h2 id="h-tatsu">相棒は、既婚・2児の父の同期</h2>
+        <ul class="quotes">
+          <li>婚活は障害対応と同じだ。ログを見ろ。……相手のな</li>
+          <li>「いい人」は褒め言葉じゃない。覚えとけ</li>
+          <li>結婚はいいぞ。……たまにな</li>
+        </ul>
+        <p class="hint">困ったら、スマホでタツにLINE。ヒントをくれます。たまに、くれません。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="howto" aria-labelledby="h-howto">
+    <div class="win">
+      <p class="label">HOW TO PLAY</p>
+      <h2 id="h-howto">あそびかた</h2>
+      <dl class="spec">
+        <dt>料金</dt><dd>無料。インストール不要で、ブラウザですぐに遊べます。</dd>
+        <dt>対応</dt><dd>PC・スマートフォン（Chrome／Safari／Edge など）</dd>
+        <dt>操作</dt><dd>クリック・タップ、またはキーボード（↑↓で選択、Enterで決定、Escでもどる）</dd>
+        <dt>音</dt><dd>BGMと効果音があります。最初にどこかを押すと鳴りはじめます。設定でオフにできます。</dd>
+        <dt>セーブ</dt><dd>3か所まで。記録はお使いのブラウザの中に保存されます。</dd>
+        <dt>時間</dt><dd>1周およそ1時間。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="h-final">
+    <h2 id="h-final">あなたの婚期は、まだ消えていない。</h2>
+    <p>……たぶん。</p>
+    <div class="cta-row"><a class="btn" href="play/">いますぐ あそぶ</a></div>
+  </section>
+</main>
+
+<footer>
+  この物語はフィクションです。実在の人物・団体・サービスとは関係ありません。<br>
+  © 2026 CodeForMarriage
+</footer>
+
+<script>window.SPRITE_BASE = 'play/';</script>
+<script src="play/js/gfx.js"></script>
+<script>
+(function () {
+  'use strict';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const paint = (cv, fn) => { GFX.init(cv); fn(); };
+
+  // ヒーロー：タイトルと同じ夜の街。星だけゆっくり瞬く
+  const hero = document.getElementById('heroCv');
+  const drawHero = () => paint(hero, () => {
+    BG.title();
+    // 月がロゴに重なるので、右の空いた空へ移す
+    E(160, 20, 8, 8, C.dnavy); E(178, 58, 6, 6, C.YL); E(181, 56, 5, 5, C.dnavy);
+    if (!reduce) { const r = Math.random; for (let i = 0; i < 6; i++) R(r() * 192 | 0, r() * 56 | 0, 1, 1, C.yl); }
+  });
+  drawHero(); if (!reduce) setInterval(drawHero, 900);
+
+  // キャッチコピーのタイプライター
+  const typed = document.getElementById('typed');
+  if (!reduce) {
+    const full = typed.textContent; typed.textContent = ''; let i = 0;
+    const step = () => { typed.textContent = full.slice(0, ++i); if (i < full.length) setTimeout(step, full[i - 1] === '。' ? 280 : 90); };
+    setTimeout(step, 600);
+  }
+
+  const run = () => {
+    // あらすじ：部屋 → 母のLINE を交互に
+    const story = document.getElementById('storyCv'), msg = document.getElementById('storyMsg');
+    const beats = [
+      ['home', null, '今日は、オレの誕生日だ。<br>ケーキのかわりに、コンビニのプリンを食べた。'],
+      ['home', 'mom', 'はは「いとこのマサルくん、2人目生まれたって。<br>あんたは？」'],
+      ['office', 'yasu', 'タツ「で、どうすんの。そろそろ」']
+    ];
+    let b = 0;
+    const showBeat = () => { const [bg, who, t] = beats[b]; paint(story, () => GFX.draw(bg, who, 'n')); msg.innerHTML = '<p>' + t + '</p>'; b = (b + 1) % beats.length; };
+    showBeat(); if (!reduce) setInterval(showBeat, 4200);
+
+    // ヒロイン：ホバーで笑顔に
+    document.querySelectorAll('.card').forEach(card => {
+      const cv = card.querySelector('canvas'), id = card.dataset.id, bg = card.dataset.bg;
+      const draw = ex => paint(cv, () => GFX.draw(bg, id, ex));
+      draw('n');
+      card.addEventListener('mouseenter', () => draw('s'));
+      card.addEventListener('mouseleave', () => draw('n'));
+      card.addEventListener('click', () => { card.dataset.on = card.dataset.on ? '' : '1'; draw(card.dataset.on ? 'blush' : 'n'); });
+    });
+
+    paint(document.getElementById('sourCv'), () => BG.grape());
+
+    // タツ：立ち絵だけ切り出して表示
+    const tc = document.getElementById('tatsuCv');
+    const tmp = document.createElement('canvas'); tmp.width = 192; tmp.height = 128;
+    paint(tmp, () => { BG.office(); drawPerson('yasu', 'n'); });
+    const tx = tc.getContext('2d'); tx.imageSmoothingEnabled = false; tx.drawImage(tmp, 48, 16, 96, 112, 0, 0, 96, 112);
+  };
+  Promise.all([document.fonts ? document.fonts.ready : 0, loadSprites()]).then(run, run);
+})();
+</script>
+</body>
+</html>

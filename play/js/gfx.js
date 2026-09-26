@@ -257,7 +257,7 @@ function loadSprites() {
         const im = new Image();
         im.onload = () => { SPR[id + '_' + e] = im; res(); };
         im.onerror = res;
-        im.src = `img/chara/${id}_${e}.png`;
+        im.src = `${window.SPRITE_BASE || ''}img/chara/${id}_${e}.png`;
       }));
     }
   }
