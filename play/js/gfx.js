@@ -382,6 +382,6 @@ const GFX = {
   ending(bg, kind, title) {
     (BG[bg] || BG.street)();
     R(0, 44, W, 40, 'rgba(0,0,0,.7)');
-    this.text([{ t: kind, size: 16, c: kind === 'TRUE END' ? C.yl : C.RED, shadow: C.k, y: 56 }, { t: title, size: 10, c: C.w, y: 74 }]);
+    this.text([{ t: kind, size: 16, c: kind !== 'BAD END' ? C.yl : C.RED, shadow: C.k, y: 56 }, { t: title, size: 10, c: C.w, y: 74 }]);
   }
 };

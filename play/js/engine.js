@@ -185,16 +185,16 @@ async function consult(id) {
 async function END(id) {
   const e = ENDINGS[id];
   const seen = seenEndings(); if (!seen.includes(id)) { seen.push(id); store.set(KEY.end, seen); }
-  const kind = e.type === 'true' ? 'TRUE END' : 'BAD END';
-  track('ending_reached', { ending_id: id, ending_no: e.no, ending_type: e.type === 'true' ? 'true' : 'bad' });
+  const kind = e.type === 'true' ? 'TRUE END' : e.type === 'secret' ? 'SECRET END' : 'BAD END';
+  track('ending_reached', { ending_id: id, ending_no: e.no, ending_type: e.type || 'bad' });
   $('cmdtitle').textContent = ''; $('cmds').innerHTML = '';
   scene(e.bg || 'street');
-  BGM.play(e.type === 'true' ? 'true' : 'bad');
+  BGM.play(e.type ? 'true' : 'bad');
   await sleep(300);
   await say(...e.text);
   GFX.ending(e.bg || 'street', kind, `No.${e.no}「${e.title}」`);
   await say(`――― ${kind} No.${e.no}「${e.title}」 ―――`, `タツの ひとこと：\n「${e.yasu}」`);
-  if (e.type !== 'true') await consult(id);
+  if (!e.type) await consult(id);   // 相談への案内は BAD END のときだけ
   const total = Object.keys(ENDINGS).length;
   await say(`みた エンディング：${seenEndings().length} / ${total}\n\nおわり`);
   G = null;
@@ -224,15 +224,27 @@ function slotInfo(i) { const d = store.get(KEY.save + i); return d ? `${i}: 第$
 async function saveMenu() {
   const i = await menu([1, 2, 3].map(slotInfo), { title: 'どこに？', cancel: true });
   if (i < 0) return;
+  if (store.get(KEY.save + (i + 1))) {
+    const k = await ask(`きろく ${i + 1} には、すでに きろくが あります。
+（${slotInfo(i + 1).replace(/^[0-9]: /, "")}）
+うわがき しますか？`, ['やめる', 'うわがきする']);
+    if (k !== 1) return;
+  }
   const d = new Date(), t = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   if (store.set(KEY.save + (i + 1), { g: G, t })) { SFX.ok(); await say(`きろく ${i + 1} に きろく しました。`); }
   else { SFX.no(); await say('きろく できませんでした。（ブラウザの 保存領域が つかえない ようです）'); }
 }
-async function loadMenu() {
+async function loadMenu(warnLoss) {
   const i = await menu([1, 2, 3].map(slotInfo), { title: 'どれを？', cancel: true });
   if (i < 0) return false;
   const d = store.get(KEY.save + (i + 1));
   if (!d) { SFX.no(); await say('その きろくは からっぽです。'); return false; }
+  if (warnLoss) {
+    const k = await ask(`きろく ${i + 1} を よみこみます。
+（${slotInfo(i + 1).replace(/^[0-9]: /, "")}）
+いまの すすみぐあいは きえます。よろしいですか？`, ['やめる', 'よみこむ']);
+    if (k !== 1) return false;
+  }
   G = JSON.parse(JSON.stringify(d.g)); SFX.ok(); return true;
 }
 async function optMenu() {
@@ -249,9 +261,9 @@ async function optMenu() {
 async function sysMenu() {
   const i = await menu(['きろくする', 'よみこむ', 'せってい', 'タイトルへ'], { title: 'きろく', cancel: true });
   if (i === 0) await saveMenu();
-  if (i === 1) { if (await loadMenu()) { await say('きろくを よみこみました。'); return 'reload'; } }
+  if (i === 1) { if (await loadMenu(true)) { await say('きろくを よみこみました。'); return 'reload'; } }
   if (i === 2) await optMenu();
-  if (i === 3) { const k = await ask('タイトルに もどりますか？（きろく していない しんこうは きえます）', ['もどる', 'やめる']); if (k === 0) { G = null; throw ENDSIG; } }
+  if (i === 3) { const k = await ask('タイトルに もどりますか？（きろく していない しんこうは きえます）', ['やめる', 'もどる']); if (k === 1) { G = null; throw ENDSIG; } }
 }
 
 // ---------- メインループ ----------
