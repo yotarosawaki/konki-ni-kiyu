@@ -148,6 +148,16 @@ const BG = {
     R(0, 86, W, 42, C.PINK); D(0, 90, W, 38, C.PINK, C.w);
     R(80, 6, 32, 20, C.w); R(82, 8, 28, 16, C.yl); R(90, 12, 12, 8, C.w);
   },
+  advice() {
+    // 相談室：落ちついた紫の壁、観葉植物、ホワイトボードに 一言
+    D(0, 0, W, 86, C.PUR, C.pur);
+    R(0, 86, W, 42, C.woodD); for (let y = 90; y < 128; y += 6) R(0, y, W, 1, C.woodD);
+    R(10, 10, 60, 40, C.w); R(12, 12, 56, 36, C.k);
+    R(16, 16, 30, 3, C.GRN); R(16, 22, 46, 2, C.w); R(16, 28, 40, 2, C.w); R(16, 34, 20, 2, C.w);
+    R(150, 8, 34, 44, C.dpur); R(152, 10, 30, 40, C.PUR);
+    R(130, 78, 3, 16, C.dgrn); R(122, 82, 5, 2, C.grn); R(133, 80, 6, 2, C.grn); R(126, 86, 4, 2, C.grn);
+    R(24, 86, 60, 4, C.woodD); R(28, 90, 3, 18, C.woodD); R(78, 90, 3, 18, C.woodD);
+  },
   french() {
     R(0, 0, W, H, C.brown); D(0, 0, W, 70, C.brown, C.woodD);
     R(20, 10, 40, 50, C.yl); R(22, 12, 36, 46, C.or); R(130, 10, 40, 50, C.yl); R(132, 12, 36, 46, C.dpur);
@@ -235,6 +245,7 @@ const PEOPLE = {
   dad:    { hair: C.G, hs: 'short', cl: C.wood, out: 'cardigan', acc: ['glasses'] },
   goto:   { hair: C.hair0, hs: 'short', cl: C.grn, out: 'polo', wide: 1 },
   clerk:  { f: 1, hair: C.woodD, hs: 'bun', cl: C.k, out: 'suit' },
+  advisor:{ f: 1, hair: C.dpur, hs: 'bob', cl: C.PUR, out: 'suit2', acc: ['glasses'] },
   tanaka: { hair: C.hair0, hs: 'slick', cl: C.w, out: 'suit2', tie: C.yl },
   kenta:  { hair: C.woodD, hs: 'short', cl: C.navy, out: 'polo' }
 };

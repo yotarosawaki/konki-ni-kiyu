@@ -37,7 +37,8 @@ const SFX = {
   sour: () => jingle([[76, 2], [75, 2], [74, 2], [73, 2], [72, 6]], 0.16, 'triangle', 0.08),
   bad: () => jingle([[69, 2], [68, 2], [65, 2], [64, 2], [57, 8]], 0.2, 'triangle', 0.09),
   good: () => jingle([[67, 1], [72, 1], [76, 1], [79, 2], [76, 1], [79, 1], [84, 2], [0, 1], [83, 1], [84, 1], [86, 1], [88, 6]], 0.13),
-  boom: () => { tone(80, 0.3, 'sawtooth', 0.06); tone(55, 0.5, 'triangle', 0.08, 0.05); }
+  boom: () => { tone(80, 0.3, 'sawtooth', 0.06); tone(55, 0.5, 'triangle', 0.08, 0.05); },
+  advice: () => jingle([[71, 2], [76, 2], [79, 3]], 0.14, 'triangle', 0.07)
 };
 
 // ---------- 画面 ----------
@@ -157,6 +158,18 @@ function has(it) { return G.items.includes(it); }
 function take(it) { G.items = G.items.filter(x => x !== it); }
 function seenEndings() { return (store.get(KEY.end) || []).filter(k => ENDINGS[k]); }
 
+// ---------- 婚活アドバイザーの診断（BAD END の あと）----------
+async function advisorScene(id) {
+  const lines = advisorLines(id);
+  if (!lines) return;
+  SFX.advice(); BGM.stop();
+  scene('advice', 'advisor', 'n');
+  $('msgwin').classList.add('bubble');
+  track('advisor_view', { ending_id: id });
+  await say('婚活アドバイザー「……こういうケース、見た ことが あります」', ...lines.map(l => 'アドバイザー「' + l + '」'));
+  $('msgwin').classList.remove('bubble');
+}
+
 // ---------- 結婚相談所への案内（BAD END の最後）----------
 const CFM_URL = 'https://cf-m.jp/contact';
 const CFM_LINK = id => CFM_URL + '?utm_source=konki&utm_medium=game&utm_campaign=badend&utm_content=' + id;
@@ -187,6 +200,7 @@ async function END(id) {
   const seen = seenEndings(); if (!seen.includes(id)) { seen.push(id); store.set(KEY.end, seen); }
   const kind = e.type === 'true' ? 'TRUE END' : e.type === 'secret' ? 'SECRET END' : 'BAD END';
   track('ending_reached', { ending_id: id, ending_no: e.no, ending_type: e.type || 'bad' });
+  if (!e.type) counterBump('bad');   // 「バッドエンドの 回数」は、正式な BAD END だけを 数える
   $('cmdtitle').textContent = ''; $('cmds').innerHTML = '';
   scene(e.bg || 'street');
   BGM.play(e.type ? 'true' : 'bad');
@@ -194,7 +208,7 @@ async function END(id) {
   await say(...e.text);
   GFX.ending(e.bg || 'street', kind, `No.${e.no}「${e.title}」`);
   await say(`――― ${kind} No.${e.no}「${e.title}」 ―――`, `タツの ひとこと：\n「${e.yasu}」`);
-  if (!e.type) await consult(id);   // 相談への案内は BAD END のときだけ
+  if (!e.type) { await advisorScene(id); await consult(id); }   // 診断と 相談への案内は BAD END のときだけ
   const total = Object.keys(ENDINGS).length;
   await say(`みた エンディング：${seenEndings().length} / ${total}\n\nおわり`);
   G = null;
@@ -381,7 +395,7 @@ async function titleScreen() {
   while (true) {
     const i = await menu(['はじめから', 'つづきから', 'エンディング', 'あそびかた', 'せってい'], { title: 'タイトル' });
     IN.skip = true;
-    if (i === 0) { G = newState(); track('game_start'); return play(); }
+    if (i === 0) { G = newState(); track('game_start'); counterBump('attempts'); return play(); }
     if (i === 1) { if (await loadMenu()) { track('game_continue', { chapter: G.ch }); return play(); } }
     if (i === 2) await endingList();
     if (i === 3) await howTo();

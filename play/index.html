@@ -56,6 +56,16 @@
   li button.back.cur { color: var(--gold); }
   li button:focus-visible, li a.ext:focus-visible { outline: 2px dashed var(--sky); outline-offset: -2px; }
   #msgwin { min-height: 9.5em; cursor: pointer; }
+  /* 婚活アドバイザーの診断：吹き出し風に色とツノを変える */
+  #msgwin.bubble { background: #1a0033; border-color: #c9a8ff; box-shadow: inset 0 0 0 3px #1a0033, inset 0 0 0 5px #c9a8ff; }
+  #msgwin.bubble::before {
+    content: ""; position: absolute; left: 28px; top: -14px; width: 0; height: 0;
+    border: 9px solid transparent; border-bottom-color: #c9a8ff;
+  }
+  #msgwin.bubble::after {
+    content: ""; position: absolute; left: 31px; top: -8px; width: 0; height: 0;
+    border: 6px solid transparent; border-bottom-color: #1a0033;
+  }
   #msgtext { white-space: pre-wrap; word-break: break-all; margin: 0; min-height: 3.3em; }
   #more { position: absolute; right: 16px; bottom: 8px; color: var(--fg); animation: blink .7s steps(1) infinite; }
   #status {
@@ -107,7 +117,9 @@
 </div>
 
 <script src="js/analytics.js"></script>
+<script src="js/counter.js"></script>
 <script src="js/gfx.js"></script>
+<script src="js/advisor.js"></script>
 <script src="js/story.js"></script>
 <script src="js/bgm.js"></script>
 <script src="js/engine.js"></script>

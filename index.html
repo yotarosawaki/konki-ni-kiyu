@@ -85,6 +85,12 @@
 
   /* ---------- 数字 ---------- */
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 40px; }
+  .realdata { text-align: center; }
+  .realdata p { margin-inline: auto; }
+  .stats.real { grid-template-columns: repeat(3, 1fr); margin: 26px 0 14px; }
+  .stats.real .stat b { color: var(--lantern); }
+  .stats.real .stat b.pink { color: var(--blush); }
+  .realdata-note { font-family: var(--dot); color: var(--steel); font-size: 13px; background: none; padding: 0; }
   .stat { text-align: center; padding: 18px 10px; }
   .stat b { display: block; font-family: var(--dot); font-weight: 400; font-size: clamp(30px, 5vw, 46px); line-height: 1.1; color: var(--lantern); font-variant-numeric: tabular-nums; }
   .stat b.pink { color: var(--blush); }
@@ -160,6 +166,7 @@
     .tagline { font-size: 13.5px; padding: 6px 10px; }
     .hero canvas { aspect-ratio: 3 / 4; max-height: none; }
     .stats { grid-template-columns: 1fr 1fr; }
+    .stats.real { grid-template-columns: 1fr; }
     .story, .sour, .tatsu { grid-template-columns: 1fr; }
     .tatsu canvas { max-width: 200px; }
     .cast { grid-template-columns: 1fr 1fr; }
@@ -315,6 +322,20 @@
     </div>
   </section>
 
+  <section id="realdata" aria-labelledby="h-realdata">
+    <div class="win realdata">
+      <p class="label">REAL DATA</p>
+      <h2 id="h-realdata">現代男子の婚活は、これくらい難しい。</h2>
+      <p>ここから先は、フィクションではありません。実際にこのゲームを遊んだ人たちの、集計です。</p>
+      <div class="stats real" id="realStats" aria-live="polite">
+        <div class="stat"><b id="rdAttempts">―</b><span>プレイされた 回数</span></div>
+        <div class="stat"><b id="rdBad" class="pink">―</b><span>バッドエンドで 終わった 回数</span></div>
+        <div class="stat"><b id="rdRate" class="pink">―</b><span>バッドエンド率</span></div>
+      </div>
+      <p class="note realdata-note" id="rdNote">集計中……</p>
+    </div>
+  </section>
+
   <section id="tatsu" aria-labelledby="h-tatsu">
     <div class="tatsu">
       <div class="win scene"><canvas class="px" id="tatsuCv" width="96" height="112" aria-label="相棒のタツ"></canvas></div>
@@ -421,6 +442,31 @@
   document.querySelectorAll('a.btn[data-loc]').forEach(a => a.addEventListener('click', () => track('play_click', { location: a.dataset.loc })));
   document.querySelectorAll('footer a[href^="https://cf-m.jp"]').forEach(a => a.addEventListener('click', () => track('company_link_click', { location: 'lp_footer' })));
   Promise.all([document.fonts ? document.fonts.ready : 0, loadSprites()]).then(run, run);
+
+  // 実測データ：外部の 無料カウンターサービスから、実際の プレイ回数を 取得する。
+  // 認証の ない サービス（サインアップ不要）を 使っている ため、正式な 統計調査 では なく、
+  // あくまで「本サイトでの おおよその 実績」。取得できない ときは、静かに 隠す。
+  (async function realData() {
+    const NS = 'konki-ni-kiyu-v1';
+    const get = async key => {
+      const r = await fetch('https://abacus.jasoncameron.dev/get/' + NS + '/' + key, { mode: 'cors' });
+      if (!r.ok) throw new Error('not ok');
+      const j = await r.json();
+      return typeof j.value === 'number' ? j.value : 0;
+    };
+    try {
+      const [attempts, bad] = await Promise.all([get('attempts'), get('bad')]);
+      const box = document.getElementById('realStats'), note = document.getElementById('rdNote');
+      if (attempts < 5) { note.textContent = 'まだ、じゅうぶんな 数の 挑戦が ありません。あなたが、最初の 記録に なるかも。'; return; }
+      const rate = Math.round((bad / attempts) * 1000) / 10;
+      document.getElementById('rdAttempts').textContent = attempts.toLocaleString('ja-JP') + '回';
+      document.getElementById('rdBad').textContent = bad.toLocaleString('ja-JP') + '回';
+      document.getElementById('rdRate').textContent = rate + '%';
+      note.textContent = '本サイトでの プレイ実績（自動集計・参考値）。ページの 表示ごとに 更新 されます。';
+    } catch (e) {
+      document.getElementById('realdata').hidden = true;
+    }
+  })();
 })();
 </script>
 </body>
