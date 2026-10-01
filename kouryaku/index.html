@@ -55,9 +55,10 @@
     transform: skewX(-6deg);
   }
   .label span { display: inline-block; transform: skewX(6deg); }
-  h1, h2, h3, p, li { word-break: auto-phrase; }
+  h1, h2, h3, h4, p, li { word-break: auto-phrase; }
   h2 { font-weight: 900; font-size: clamp(21px, 3.6vw, 30px); line-height: 1.5; margin: 0 0 16px; text-wrap: balance; }
   h3 { font-weight: 900; font-size: 19px; margin: 0; }
+  h4 { font-weight: 900; font-size: 15px; margin: 0 0 4px; }
   p { margin: 0 0 1em; max-width: 42em; }
   section { padding-block: 44px 0; }
 
@@ -92,11 +93,21 @@
     padding: 6px 16px; margin: 14px auto 0; display: inline-block; transform: rotate(1deg);
   }
   .stamp {
-    display: inline-block; margin-top: 18px; width: 108px; height: 108px; border: 3px solid var(--red); border-radius: 50%;
+    display: inline-flex; margin-top: 18px; width: 108px; height: 108px; border: 3px solid var(--red); border-radius: 50%;
     color: var(--red); font-weight: 900; font-size: 13px; line-height: 1.35; transform: rotate(-9deg);
-    display: flex; align-items: center; justify-content: center; text-align: center; padding: 6px;
+    align-items: center; justify-content: center; text-align: center; padding: 6px;
     background: rgba(207,18,37,.06);
   }
+  .cover-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+  .cover-tags span { font-size: 11px; font-weight: 700; color: #efe6cd; border: 1px solid #efe6cd; padding: 2px 9px; opacity: .85; }
+
+  /* ---------- もくじ ---------- */
+  .toc .box { padding: 20px 24px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 28px; }
+  .toc li { display: flex; align-items: baseline; gap: 6px; font-size: 13.5px; padding: 6px 0; border-bottom: 1px dotted var(--rule); break-inside: avoid; }
+  .toc li .no { font-weight: 900; color: var(--red); width: 1.6em; flex: none; }
+  .toc li .pg { margin-left: auto; color: var(--gray); font-size: 12px; }
+  @media (max-width: 560px) { .toc ol { columns: 1; } }
 
   /* ---------- まえがき（本文ページ風） ---------- */
   .foreword .box { border-width: 2px; }
@@ -138,20 +149,53 @@
   }
   .hintlist li.scribble { font-family: var(--hand); color: var(--redDark); font-size: 15px; background: rgba(244,201,12,.28); padding-top: 6px; padding-bottom: 6px; padding-left: 104px; }
   .hintlist li.scribble::before { content: "※編集後記"; background: transparent; color: var(--redDark); border: 1.5px solid var(--redDark); top: 6px; }
+  .ng {
+    display: block; font-size: 12.5px; font-weight: 700; color: var(--redDark); background: rgba(207,18,37,.08);
+    border: 1.5px dashed var(--redDark); padding: 6px 10px; margin: 0 0 12px;
+  }
+  .ng b { background: var(--redDark); color: #fff; font-weight: 900; padding: 0 6px; margin-right: 6px; }
   .verdict {
     font-size: 13px; color: var(--ink); border-top: 2px dotted var(--rule);
     padding-top: 10px; margin: 0; font-family: var(--hand);
   }
   .verdict b { color: var(--redDark); font-weight: 400; }
 
+  /* ---------- 脇を固める面々 ---------- */
+  .side-cast { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .side { padding: 0; overflow: hidden; border-width: 2px; }
+  .side .shead { display: flex; align-items: center; gap: 0; border-bottom: 2px solid var(--ink); background: #e9e0c4; }
+  .side .photo { width: 72px; flex: none; }
+  .side h4 { padding: 8px 10px; font-size: 14.5px; display: flex; flex-direction: column; gap: 1px; }
+  .side h4 small { font-weight: 400; color: var(--gray); font-size: 10.5px; }
+  .side p { font-size: 13px; line-height: 1.75; padding: 10px 12px; margin: 0; }
+  @media (max-width: 760px) { .side-cast { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .side-cast { grid-template-columns: 1fr; } }
+
+  /* ---------- 進行チャート ---------- */
+  .flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .flow li { display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: start; padding-bottom: 10px; border-bottom: 1px dashed var(--rule); }
+  .flow .when { font-weight: 900; color: #fff; background: var(--ink); padding: 3px 8px; font-size: 12px; text-align: center; height: fit-content; }
+  .flow .what b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+  .flow .what span { font-size: 13px; color: var(--gray); }
+  .flow-note { font-family: var(--hand); color: var(--gray); font-size: 14px; margin-top: 14px; }
+
   /* ---------- 早見表 ---------- */
   table.chart { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--paper2); }
   table.chart th, table.chart td { border: 1.5px solid var(--ink); padding: 9px 12px; text-align: left; vertical-align: top; }
-  table.chart td:first-child { white-space: nowrap; font-weight: 700; }
   table.chart th { color: #fff; background: var(--ink); font-weight: 700; font-size: 12.5px; }
   table.chart td.na { color: var(--gray); font-style: italic; font-family: var(--hand); font-style: normal; }
+  table.chart td:first-child { white-space: nowrap; font-weight: 700; }
   table.chart tbody tr:nth-child(even) td { background: #efe6cd; }
   .chart-wrap { overflow-x: auto; }
+
+  /* ---------- エンディング チェックリスト ---------- */
+  .ending-group + .ending-group { margin-top: 22px; }
+  .ending-group h4 { color: var(--redDark); border-bottom: 2px solid var(--redDark); padding-bottom: 4px; margin-bottom: 10px; }
+  .ending-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px 14px; }
+  .ending-grid li { font-size: 13.5px; display: flex; align-items: center; gap: 8px; line-height: 1.5; }
+  .ending-grid .chk { flex: none; width: 17px; height: 17px; border: 1.8px solid var(--ink); background: var(--paper2); }
+  .ending-grid.true .chk { border-color: var(--yellow); background: #fff6cf; }
+  .ending-note { font-size: 12.5px; color: var(--gray); margin-top: 10px; }
 
   /* ---------- 裏技（読者投稿はがき風） ---------- */
   .ura { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
@@ -161,6 +205,12 @@
   }
   .ura li::before { content: "？"; position: absolute; left: 11px; top: 10px; color: var(--red); font-weight: 900; font-size: 16px; }
   .ura .cred { font-family: var(--hand); color: var(--gray); font-size: 13px; display: block; margin-top: 6px; }
+
+  /* ---------- 取材ノート（日記） ---------- */
+  .diary { display: grid; gap: 14px; }
+  .diary div { padding: 12px 14px; background: var(--paper2); border-left: 4px solid var(--redDark); }
+  .diary .d { font-family: var(--hand); font-weight: 700; color: var(--redDark); font-size: 13.5px; margin-bottom: 4px; display: block; }
+  .diary p { margin: 0; font-size: 14px; }
 
   /* ---------- Q&A ---------- */
   .qa { display: grid; gap: 16px; }
@@ -193,6 +243,7 @@
   @media (max-width: 760px) {
     .cast { grid-template-columns: 1fr; }
     .card .head { grid-template-columns: 88px 1fr; }
+    .flow li { grid-template-columns: 84px 1fr; }
     body { font-size: 15px; }
     section { padding-block: 36px 0; }
     .masthead { font-size: 10px; }
@@ -216,10 +267,34 @@
     <h1 class="booktitle">必勝攻略ガイド</h1>
     <div class="subtitle">『婚期に消ゆ』完全……のつもりだった攻略本</div>
     <div class="stamp">攻略<br>難易度<br>参考に<br>なりません</div>
+    <div class="cover-tags">
+      <span>5人完全網羅（のつもり）</span>
+      <span>脇役9名も収録</span>
+      <span>全エンディング チェックリスト付き</span>
+      <span>月刊 進行チャート</span>
+    </div>
   </div>
 </header>
 
 <main class="wrap">
+
+  <section class="toc" aria-labelledby="h-toc">
+    <div class="box">
+      <p class="label"><span>もくじ</span></p>
+      <h2 id="h-toc" style="font-size:18px; margin-bottom:12px;">この一冊で分かること（分かるとは言っていない）</h2>
+      <ol>
+        <li><span class="no">01</span>まえがき<span class="pg">p.003</span></li>
+        <li><span class="no">02</span>5人のヒロイン攻略<span class="pg">p.004</span></li>
+        <li><span class="no">03</span>脇を固める面々<span class="pg">p.011</span></li>
+        <li><span class="no">04</span>進行チャート（月別）<span class="pg">p.014</span></li>
+        <li><span class="no">05</span>必勝ルート早見表<span class="pg">p.016</span></li>
+        <li><span class="no">06</span>エンディング・コンプリートチェックリスト<span class="pg">p.017</span></li>
+        <li><span class="no">07</span>裏技・小ネタ<span class="pg">p.020</span></li>
+        <li><span class="no">08</span>編集部の取材ノート<span class="pg">p.022</span></li>
+        <li><span class="no">09</span>よくある質問<span class="pg">p.023</span></li>
+      </ol>
+    </div>
+  </section>
 
   <section class="foreword" aria-labelledby="h-fw">
     <div class="box">
@@ -227,7 +302,7 @@
       <h2 id="h-fw">婚活に、必勝法などない。それでも、本書は作られた。</h2>
       <p>本書は『婚期に消ゆ』の攻略本として企画された。編集部は当初、各ヒロインの好感度数値、選択肢の正解・不正解、TRUE ENDへの最短ルートまで、すべてを数値化する予定だった。</p>
       <p>しかし取材を進めるうちに、編集部は気づいてしまった。好感度は、相手の気分と状況によって、同じ行動でも上下すること。「正解」に見えた選択が、半年後に効いてくること。そして何より――攻略情報を先に知ってしまうと、このゲームはいちばん面白いところが消えてしまうこと。</p>
-      <p>というわけで、本書に載っているのは「ヒント」である。読めば何かが分かった気になるが、実際のプレイには、たぶんそれほど役に立たない。それでいいと、編集部は開き直ることにした。</p>
+      <p>というわけで、本書に載っているのは「ヒント」である。読めば何かが分かった気になるが、実際のプレイには、たぶんそれほど役に立たない。それでいいと、編集部は開き直ることにした。ページ数だけは、やけに増えた。</p>
       <p class="sign">――攻略班（解散済み）</p>
     </div>
   </section>
@@ -253,7 +328,10 @@
             <li>彼女が大事にしている"小さなもの"に気づけるかどうかが、分かれ道になるらしい。何に気づけばいいかは、画面をよく見てほしい。</li>
             <li>連絡先を聞くタイミングには、早すぎず遅すぎずの頃合いがある……という噂がある。何回目の会話かは、各自の記録を参照のこと（記録は取っていない）。</li>
             <li>会話の選択肢の中に、聞くと空気が変わるものが一つ混ざっている。どれかは、聞いてみれば分かる。</li>
+            <li>図書館は、閉館時間が近づくと空気が変わるという報告がある。何がどう変わるかは、行けば分かる。</li>
+            <li>眼鏡について触れるべきかどうか、編集部内でも意見が割れている。結論は出ていない。</li>
           </ul>
+          <span class="ng"><b>NG</b>結婚しているかどうかを、無神経に聞くこと（たぶん）。</span>
           <p class="verdict">編集部評：<b>無口なぶん、何を考えているか本当に分からない。</b>一番ヒントが少ないのに、一番聞かれる。</p>
         </div>
       </article>
@@ -272,7 +350,10 @@
             <li>誰にでも明るい。それは長所であり、攻略情報としては、あまり当てにならない。</li>
             <li>「先輩みたいな人と結婚する人は幸せ」と言われたら、その言葉をどう受け取るかは、プレイヤーの経験値に委ねられる。</li>
             <li>彼女に深入りするルートが存在する。進んだ先にある景色について、編集部はノーコメントを貫く。</li>
+            <li>差し入れをもらえる場面がある。個数に意味があるという投稿があるが、真偽は不明。</li>
+            <li>花火大会に誘われる場面で「みんなで」という言葉が出る。深読みしても、結果はたぶん変わらない。</li>
           </ul>
+          <span class="ng"><b>NG</b>「みんなで」を額面どおりに信じること（信じなくても同じ）。</span>
           <p class="verdict">編集部評：<b>とっつきやすい。だからこそ、足元をすくわれる。</b></p>
         </div>
       </article>
@@ -291,8 +372,11 @@
             <li>通う頻度に応じて、呼ばれ方が変わるタイミングがある。何回通えばいいかは、編集部も数えるのをやめた。</li>
             <li>将来の夢について尋ねると、会話が進展する。進展の先に何が起きるかは、本人のみぞ知る。</li>
             <li>物語の終盤、人生を変える選択を迫られる場面がある。正解・不正解はない、と編集部は信じたい。</li>
+            <li>カップの柄について聞くと、意外な一面が見える、という報告がある。誰が描いたかまでは、ここには書かない。</li>
+            <li>夢の場所については、序盤からそれとなく繰り返し語られている。聞き逃しても、特に問題はない。</li>
             <li class="scribble">（担当ライター注・消し忘れ）個人的には、同じ話題を100回くらい話しかけたくなるタイプの喫茶店だと思います。天気の話とか。……すみません、この一文は削除し忘れです。忘れてください。</li>
           </ul>
+          <span class="ng"><b>NG</b>同じ話題を、回数を数えながら続けること（出禁のリスクあり）。</span>
           <p class="verdict">編集部評：<b>優しさに救われるか、振り回されるかは紙一重。</b>紙一重の見極め方は、本書には載っていない。</p>
         </div>
       </article>
@@ -312,7 +396,10 @@
             <li>正直さが評価される質問と、されない質問がある。見分け方は、彼女の表情に出る……かもしれない。</li>
             <li>自分を大きく見せる選択肢がある。選んだ場合、後の展開に影響するらしいが、どう影響するかは体験してほしい。</li>
             <li>家事について聞かれる場面で、ある家電の名前を挙げると、珍しく彼女の反応が変わる。製品名はここでは伏せる。</li>
+            <li>年収を聞かれる場面がある。見栄を張った場合、どこかで帳尻を合わせられる……かもしれない。</li>
+            <li>将来のビジョンについて聞かれたら、具体的に答えたほうがいい、という投稿が複数ある。具体的に、とは何かまでは書かれていなかった。</li>
           </ul>
+          <span class="ng"><b>NG</b>話を盛ること（発覚した場合の展開は、わりとシビア）。</span>
           <p class="verdict">編集部評：<b>攻略情報が一番少ないのに、一番攻略情報が欲しくなる相手。</b></p>
         </div>
       </article>
@@ -331,7 +418,10 @@
             <li>誘いのテンポが、終始やや速い。速さそのものに意味があるかどうかは、プレイヤーの判断に委ねる。</li>
             <li>施設内の掲示物は、できれば全部読んでおくことを推奨する。読まなくても話は進む。</li>
             <li>ある単語が会話に登場したら、一度立ち止まって深呼吸することを強く勧める。単語そのものは、出てきたときに分かる。</li>
+            <li>入会すると、月会費が発生する。金額については、ちゃんと確認したほうがいい。</li>
+            <li>LINE交換の直後に届く最初のメッセージは、わりと重要な伏線だという説がある。</li>
           </ul>
+          <span class="ng"><b>NG</b>「権利収入」という単語をスルーすること。</span>
           <p class="verdict">編集部評：<b>明るさに引っ張られて、気づいたら手遅れ、になりがち。</b>手遅れの定義は人による。</p>
         </div>
       </article>
@@ -348,11 +438,111 @@
             <li>ある一人のヒロインと、特定の行動を根気よく積み重ねると、エンディングは一つだけ分岐する……らしい。</li>
             <li>編集部内でも、到達報告は片手で足りる人数しかない。到達者は一様に「攻略情報なんて読まなくてよかった」と言う。</li>
             <li>その一言を信じるかどうかも、本書は関知しない。</li>
+            <li>到達者の記録によれば、季節は冬で終わるらしい。それ以上の情報は、編集部も持っていない。</li>
+            <li>物語の中の、ある小さな小物が、最後まで意味を持ち続けるという報告がある。小物の名前は、ここには書かない。</li>
           </ul>
           <p class="verdict">編集部評：<b>載せられる情報が、本当に何もない。</b></p>
         </div>
       </article>
 
+    </div>
+  </section>
+
+  <section id="side" aria-labelledby="h-side">
+    <p class="label"><span>脇を固める面々</span></p>
+    <h2 id="h-side">攻略対象ではない。が、無視できない9人</h2>
+    <div class="side-cast">
+
+      <article class="box side" data-id="yasu" data-bg="office">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="タツ"></canvas></div>
+          <h4>タツ <small>33歳・同期（相棒）</small></h4>
+        </div>
+        <p>攻略対象ではない。が、本書内で一番頼りになるのは、間違いなくこの男である。迷ったら、とりあえず話しかけてみてほしい。役に立つかは、気分次第らしい。</p>
+      </article>
+
+      <article class="box side" data-id="boss" data-bg="office">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="部長"></canvas></div>
+          <h4>部長 <small>50代・上司</small></h4>
+        </div>
+        <p>「お前がいないと回らん」のひとことに、何度救われ、何度絶望したか分からない。攻略法は、特にない。</p>
+      </article>
+
+      <article class="box side" data-id="nishida" data-bg="office">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ニシダ"></canvas></div>
+          <h4>ニシダ <small>22歳・後輩</small></h4>
+        </div>
+        <p>頼ると、思った以上にちゃんとやってくれる。頼りすぎた場合に何が起きるかは、本書では扱わない。</p>
+      </article>
+
+      <article class="box side" data-id="mom" data-bg="jikka">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="はは"></canvas></div>
+          <h4>はは <small>60代・母</small></h4>
+        </div>
+        <p>結婚について、ことあるごとに聞いてくる。心配しているのか、ただの世間話なのかは、最後まで判断がつかない。</p>
+      </article>
+
+      <article class="box side" data-id="dad" data-bg="jikka">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ちち"></canvas></div>
+          <h4>ちち <small>60代・父</small></h4>
+        </div>
+        <p>ほぼ喋らない。たまに発する一言が、妙に刺さる。攻略情報というより、人生訓に近い。</p>
+      </article>
+
+      <article class="box side" data-id="goto" data-bg="izakaya">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ゴトウ"></canvas></div>
+          <h4>ゴトウ <small>33歳・中学の同級生</small></h4>
+        </div>
+        <p>同窓会の幹事。声が大きい。彼経由で、重要な出会いが発生することがある、らしい。</p>
+      </article>
+
+      <article class="box side" data-id="clerk" data-bg="jewelry">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="宝石店の店員"></canvas></div>
+          <h4>宝石店の店員 <small>銀座</small></h4>
+        </div>
+        <p>指輪を選ぶ場面で登場する。予算によって態度が変わるという未確認情報があるが、裏は取れていない。</p>
+      </article>
+
+      <article class="box side" data-id="tanaka" data-bg="lounge">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="タナカ"></canvas></div>
+          <h4>タナカ <small>ハルカの「ビジネスパートナー」</small></h4>
+        </div>
+        <p>会話に登場した瞬間、警戒レベルを一段階上げることを推奨する。理由は、出てくれば分かる。</p>
+      </article>
+
+      <article class="box side" data-id="kenta" data-bg="office">
+        <div class="shead">
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ケンタ"></canvas></div>
+          <h4>ケンタ <small>ミサキの婚約者</small></h4>
+        </div>
+        <p>非の打ちどころがない好青年。それが一番つらい、という感想が編集部内で多数を占めた。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="flow" aria-labelledby="h-flow">
+    <div class="box">
+      <p class="label"><span>進行チャート</span></p>
+      <h2 id="h-flow">月別・あらすじ早見（内容は、あらすじだけ）</h2>
+      <ul class="flow">
+        <li><span class="when">4月</span><span class="what"><b>33歳の春</b><span>物語が始まる月。特に何も起きないようで、実はいろいろ起きている。</span></span></li>
+        <li><span class="when">5月</span><span class="what"><b>5月のスワイプ</b><span>マッチングアプリを始める月。指が疲れる。</span></span></li>
+        <li><span class="when">6月</span><span class="what"><b>同窓会</b><span>中学時代の知り合いと再会する月。過去は、だいたい都合よく美化されている。</span></span></li>
+        <li><span class="when">7〜8月</span><span class="what"><b>夏の障害</b><span>仕事とプライベートが衝突し始める月。タイトルの意味は、プレイすれば分かる。</span></span></li>
+        <li><span class="when">10月</span><span class="what"><b>秋の答えあわせ</b><span>ここまでの行動の結果が、じわじわ表面化してくる月。</span></span></li>
+        <li><span class="when">11月</span><span class="what"><b>つきあうということ</b><span>関係が進展する……とは限らない月。</span></span></li>
+        <li><span class="when">12月</span><span class="what"><b>実家と指輪</b><span>帰省と指輪選びが重なる、慌ただしい月。</span></span></li>
+        <li><span class="when">12/24</span><span class="what"><b>聖夜</b><span>すべての答え合わせをする日。多くの場合、答えは厳しい。</span></span></li>
+      </ul>
+      <p class="flow-note">※ 9月は、月別チャートに存在しない。何があったのかは、本書では分からなかった。</p>
     </div>
   </section>
 
@@ -378,6 +568,74 @@
     </div>
   </section>
 
+  <section id="endings" aria-labelledby="h-endings">
+    <div class="box">
+      <p class="label"><span>エンディング・コンプリートチェックリスト</span></p>
+      <h2 id="h-endings">名前だけは、全部載せた</h2>
+      <p style="font-size:14px; color:var(--gray);">タイトルを見れば、だいたい何が起きたか想像はつくはずである。どうすればたどり着けるかは、一切書いていない。チェック欄はお好きにどうぞ（印刷はできません）。</p>
+
+      <div class="ending-group">
+        <h4>通常エンディング</h4>
+        <ul class="ending-grid">
+          <li><i class="chk"></i>コスパ最強</li>
+          <li><i class="chk"></i>ハイスペ女は性格が悪い</li>
+          <li><i class="chk"></i>筋肉は裏切らない</li>
+          <li><i class="chk"></i>自由という名の檻</li>
+          <li><i class="chk"></i>人生の墓場</li>
+          <li><i class="chk"></i>ガチャは裏切る</li>
+          <li><i class="chk"></i>夏の終わり</li>
+          <li><i class="chk"></i>推し活</li>
+          <li><i class="chk"></i>猫は裏切らない</li>
+          <li><i class="chk"></i>仕事が恋人</li>
+          <li><i class="chk"></i>紙切れ一枚</li>
+          <li><i class="chk"></i>自分磨き</li>
+          <li><i class="chk"></i>AIの彼女</li>
+          <li><i class="chk"></i>FIRE</li>
+          <li><i class="chk"></i>先手必勝</li>
+          <li><i class="chk"></i>デバッグ完了</li>
+          <li><i class="chk"></i>社畜</li>
+          <li><i class="chk"></i>実家</li>
+          <li><i class="chk"></i>先延ばし</li>
+          <li><i class="chk"></i>不戦敗</li>
+          <li><i class="chk"></i>自由の刑</li>
+          <li><i class="chk"></i>優しさという名の逃げ</li>
+          <li><i class="chk"></i>市場価値の再計算</li>
+          <li><i class="chk"></i>窓際</li>
+          <li><i class="chk"></i>新橋に消ゆ</li>
+          <li><i class="chk"></i>書類選考落ち</li>
+          <li><i class="chk"></i>契約結婚</li>
+          <li><i class="chk"></i>プラチナムスター会員</li>
+          <li><i class="chk"></i>季節だけが過ぎた</li>
+          <li><i class="chk"></i>504 Gateway Timeout</li>
+          <li><i class="chk"></i>聖夜の障害対応</li>
+          <li><i class="chk"></i>オンコール</li>
+          <li><i class="chk"></i>保険の代償</li>
+          <li><i class="chk"></i>考えさせて</li>
+          <li><i class="chk"></i>ごめんなさい</li>
+          <li><i class="chk"></i>早すぎた告白</li>
+          <li><i class="chk"></i>お見合い</li>
+        </ul>
+      </div>
+
+      <div class="ending-group">
+        <h4>隠しエンディング（天気の話 系）</h4>
+        <ul class="ending-grid">
+          <li><i class="chk"></i>晴れのち結婚</li>
+          <li><i class="chk"></i>天気の話で出禁</li>
+          <li><i class="chk"></i>天気予報士ではありません</li>
+        </ul>
+      </div>
+
+      <div class="ending-group">
+        <h4>TRUE END</h4>
+        <ul class="ending-grid true">
+          <li><i class="chk"></i>婚期に消ゆ</li>
+        </ul>
+        <p class="ending-note">達成率、非公開。本書の誰も、まだ全部は埋められていない。</p>
+      </div>
+    </div>
+  </section>
+
   <section id="ura" aria-labelledby="h-ura">
     <div class="box">
       <p class="label"><span>裏技・小ネタ（未確認情報）</span></p>
@@ -388,7 +646,25 @@
         <li>カフェで、同じ話を延々と続けると何か起きる、という投稿が複数届いている。「心が折れる前に、何かが起きた」「普通に出禁になった」など、結果はまちまち。回数を公表した投稿者はいない。<span class="cred">投稿者：複数（天気の話が多いという共通点のみ判明）</span></li>
         <li>タイトル画面で何もせず待っていると、何か起きる……という説がある。編集部は30分待って、何も起きなかった。<span class="cred">編集部実測・不成立</span></li>
         <li>特定のセリフを見た直後にブラウザをリロードすると得する、という都市伝説がある。損することもある、とも言われている。<span class="cred">投稿者：複数（内容が食い違う）</span></li>
+        <li>セーブを3つとも同じタイミングで上書きすると何かが起きる、という噂がある。編集部が検証したところ、単にセーブ枠が足りなくなっただけだった。<span class="cred">編集部実測・不成立</span></li>
+        <li>深夜にプレイすると、心情描写が変わって見える、という体験談が複数ある。編集部も深夜に検証したが、ただ眠くなっただけだった。<span class="cred">投稿者：複数（時間帯はバラバラ）</span></li>
+        <li>BGMをミュートしてプレイすると攻略上有利になる、という俗説がある。精神衛生には良いかもしれない。<span class="cred">投稿者：匿名（根拠不明）</span></li>
+        <li>全エンディングを埋めると何かが起きる、というのはよく聞く話だが、よく聞くだけで、実際に確認した人には会ったことがない。<span class="cred">編集部・伝聞のみ</span></li>
+        <li>主人公の行動パターンを記録してグラフ化すると傾向が見える、という読者がいたが、送られてきたのは真っ白なグラフだった。<span class="cred">投稿者：SIer勤務（自称）</span></li>
       </ul>
+    </div>
+  </section>
+
+  <section id="diary" aria-labelledby="h-diary">
+    <div class="box">
+      <p class="label"><span>編集部の取材ノート</span></p>
+      <h2 id="h-diary">日替わり・制作の裏側（という名の言い訳）</h2>
+      <div class="diary">
+        <div><span class="d">取材1日目</span><p>企画会議。「ちゃんとした攻略本を作ろう」と全員が言った。全員、本気だったはずである。</p></div>
+        <div><span class="d">取材12日目</span><p>好感度の数値を取ろうとしたら、同じ選択をしても結果が毎回微妙に違うことに気づく。企画が、静かに揺らぎ始める。</p></div>
+        <div><span class="d">取材23日目</span><p>「結局、プレイヤー次第なのでは」という発言が編集部内から出る。誰も否定しなかった。議事録にはそう残っている。</p></div>
+        <div><span class="d">校了前日</span><p>気づいたら、本書の半分が「本人に聞いてください」で埋まっていた。もう直す時間はない。ページ数だけは、目標を上回った。</p></div>
+      </div>
     </div>
   </section>
 
@@ -412,6 +688,22 @@
         <div>
           <dt>続編の攻略本は出ますか？</dt>
           <dd>攻略班が解散しているため、未定です。有志を募集しています（無給）。</dd>
+        </div>
+        <div>
+          <dt>攻略本なのに、攻略情報が少なくないですか？</dt>
+          <dd>はい。タイトルに「必勝」と入れたのは、編集部の希望的観測です。</dd>
+        </div>
+        <div>
+          <dt>この本は、プレイ前と後、どちらで読むべきですか？</dt>
+          <dd>軽く読んでから遊び、詰まったら読み返す、くらいがちょうどいいと思います。</dd>
+        </div>
+        <div>
+          <dt>TRUE ENDのネタバレはありますか？</dt>
+          <dd>ありません。本書の誰も、最後まで内容を書く勇気がありませんでした。</dd>
+        </div>
+        <div>
+          <dt>攻略班は、なぜ解散したのですか？</dt>
+          <dd>本書を作り終えたからです。後任は、現在も募集中です。</dd>
         </div>
       </dl>
     </div>
@@ -445,8 +737,9 @@
   'use strict';
   const paint = (cv, fn) => { GFX.init(cv); fn(); };
   const run = () => {
-    document.querySelectorAll('.card[data-id]').forEach(card => {
+    document.querySelectorAll('[data-id]').forEach(card => {
       const cv = card.querySelector('canvas'), id = card.dataset.id, bg = card.dataset.bg;
+      if (!cv) return;
       paint(cv, () => GFX.draw(bg, id, 'n'));
     });
   };
