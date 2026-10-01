@@ -14,160 +14,215 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;800&family=Yomogi&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
 <style>
+  /* 「予算のないゲーム雑誌の、特別付録・攻略ガイド」という体裁。紙・活版・赤ペンの3色だけで構成する */
   :root {
-    color-scheme: dark;
-    --night: #0b0c2c;
-    --ink: #05051a;
-    --paper: #fcfcfc;
-    --lantern: #f8b800;
-    --signal: #f83800;
-    --blush: #f878f8;
-    --steel: #a3a8cc;
-    --dot: "DotGothic16", "MS Gothic", monospace;
-    --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+    color-scheme: light;
+    --paper: #efe6cd;      /* 焼けた紙 */
+    --paper2: #fbf4e2;     /* ボックスの中の紙（少し明るい） */
+    --ink: #201c14;        /* 本文のインク */
+    --rule: #c9bb92;       /* 罫線 */
+    --red: #cf1225;        /* 表紙の赤 */
+    --redDark: #8c0c1a;
+    --yellow: #f4c90c;     /* 蛍光ペン・帯 */
+    --blue: #1d3f78;       /* たまに差し色で使う青 */
+    --gray: #6c6450;       /* キャプション等のグレー */
+    --mincho: "Shippori Mincho", "Hiragino Mincho ProN", serif;
+    --hand: "Yomogi", "Zen Kaku Gothic New", sans-serif;
+    --gothic: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    margin: 0; background: var(--night); color: var(--paper);
-    font-family: var(--body); font-size: 16px; line-height: 1.9;
+    margin: 0; color: var(--ink);
+    font-family: var(--gothic); font-size: 16px; line-height: 1.9;
+    background:
+      radial-gradient(rgba(32,28,20,.05) 1px, transparent 1.3px) 0 0 / 3px 3px,
+      var(--paper);
   }
   a { color: inherit; }
   .wrap { max-width: 980px; margin: 0 auto; padding-inline: 16px; }
-  canvas.px { display: block; width: 100%; max-width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+  canvas.px { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
 
-  .win {
-    background: var(--ink); border: 3px solid var(--paper); border-radius: 8px;
-    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper);
-    padding: 22px 24px; position: relative;
+  /* 印刷っぽい箱（白っぽい紙面、黒の実線） */
+  .box {
+    background: var(--paper2); border: 2px solid var(--ink); padding: 22px 24px; position: relative;
   }
-  .label { font-family: var(--dot); color: var(--lantern); letter-spacing: .12em; font-size: 14px; margin: 0 0 6px; }
+  .label {
+    display: inline-block; font-weight: 900; color: #fff; background: var(--red);
+    letter-spacing: .12em; font-size: 12.5px; margin: 0 0 10px; padding: 3px 10px;
+    transform: skewX(-6deg);
+  }
+  .label span { display: inline-block; transform: skewX(6deg); }
   h1, h2, h3, p, li { word-break: auto-phrase; }
-  h2 { font-family: var(--dot); font-weight: 400; font-size: clamp(24px, 4.2vw, 36px); line-height: 1.35; margin: 0 0 16px; text-wrap: balance; }
-  h3 { font-family: var(--dot); font-weight: 400; font-size: 20px; margin: 0; }
+  h2 { font-weight: 900; font-size: clamp(21px, 3.6vw, 30px); line-height: 1.5; margin: 0 0 16px; text-wrap: balance; }
+  h3 { font-weight: 900; font-size: 19px; margin: 0; }
   p { margin: 0 0 1em; max-width: 42em; }
-  section { padding-block: 56px 0; }
+  section { padding-block: 44px 0; }
 
-  /* ---------- ヘッダー：表紙 ---------- */
-  .cover { position: relative; background: var(--ink); border-bottom: 4px solid var(--paper); overflow: hidden; }
-  .cover canvas { width: 100%; aspect-ratio: 3 / 2; max-height: 70vh; object-fit: cover; }
-  .cover-copy {
-    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    padding: clamp(20px, 6vw, 56px) 16px 16px; text-align: center; gap: 8px;
+  /* ---------- 表紙 ---------- */
+  .cover { background: var(--ink); border-bottom: 6px solid var(--red); padding-block: 18px 26px; position: relative; overflow: hidden; }
+  .cover::before { /* 粗いハーフトーン地紋 */
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(rgba(255,255,255,.05) 1.4px, transparent 1.6px) 0 0 / 10px 10px;
+    pointer-events: none;
   }
-  .kan { font-family: var(--dot); font-size: clamp(12px, 2vw, 14px); color: var(--lantern); background: rgba(5,5,26,.82); padding: 3px 12px; letter-spacing: .2em; }
+  .masthead { display: flex; justify-content: space-between; align-items: flex-start; padding-inline: 16px; font-family: var(--gothic); color: #efe6cd; font-size: 12px; position: relative; }
+  .masthead .pub { font-weight: 900; letter-spacing: .08em; }
+  .masthead .pub small { display: block; font-weight: 400; color: #a79; opacity: .8; font-size: 10px; margin-top: 2px; }
+  .price {
+    border: 1.5px solid #efe6cd; padding: 3px 8px; font-size: 10.5px; line-height: 1.5; text-align: right;
+  }
+  .barcode { display: flex; gap: 1px; height: 22px; margin-top: 4px; align-items: flex-end; }
+  .barcode i { display: block; width: 2px; background: #efe6cd; }
+  .cover-copy { position: relative; text-align: center; padding: 18px 16px 8px; }
+  .ribbon {
+    display: inline-block; background: var(--red); color: #fff; font-weight: 900; font-size: clamp(13px, 2.2vw, 16px);
+    padding: 5px 22px; transform: rotate(-2deg); box-shadow: 3px 3px 0 rgba(0,0,0,.5);
+    letter-spacing: .06em; margin-bottom: 14px;
+  }
   .booktitle {
-    font-family: var(--dot); font-weight: 400; margin: 6px 0 0; line-height: 1.15;
-    font-size: clamp(34px, 7.4vw, 60px); letter-spacing: .03em;
-    text-shadow: 3px 3px 0 var(--signal), 6px 6px 0 var(--ink);
+    font-weight: 900; margin: 0; line-height: 1.2; color: #fff;
+    font-size: clamp(32px, 8vw, 58px); letter-spacing: .02em;
+    text-shadow: 3px 3px 0 var(--red), 0 0 2px rgba(0,0,0,.4);
   }
-  .subtitle { font-family: var(--dot); font-size: clamp(14px, 2.2vw, 18px); background: rgba(5,5,26,.82); padding: 6px 14px; margin-top: 10px; color: var(--paper); }
+  .subtitle {
+    font-weight: 700; font-size: clamp(13px, 2.1vw, 16px); color: var(--ink); background: var(--yellow);
+    padding: 6px 16px; margin: 14px auto 0; display: inline-block; transform: rotate(1deg);
+  }
   .stamp {
-    font-family: var(--dot); font-size: clamp(12px, 1.8vw, 14px); color: var(--signal); border: 2px solid var(--signal);
-    padding: 4px 10px; margin-top: 14px; background: rgba(5,5,26,.82); transform: rotate(-3deg); display: inline-block;
+    display: inline-block; margin-top: 18px; width: 108px; height: 108px; border: 3px solid var(--red); border-radius: 50%;
+    color: var(--red); font-weight: 900; font-size: 13px; line-height: 1.35; transform: rotate(-9deg);
+    display: flex; align-items: center; justify-content: center; text-align: center; padding: 6px;
+    background: rgba(207,18,37,.06);
   }
 
-  /* ---------- 前書き ---------- */
-  .foreword p { max-width: 100%; }
-  .foreword .sign { text-align: right; font-family: var(--dot); color: var(--steel); font-size: 14px; margin-top: 18px; }
+  /* ---------- まえがき（本文ページ風） ---------- */
+  .foreword .box { border-width: 2px; }
+  .foreword h2 { font-family: var(--mincho); font-weight: 800; }
+  .foreword p { font-family: var(--mincho); font-size: 15.5px; line-height: 2; max-width: 100%; }
+  .foreword .sign { text-align: right; font-family: var(--hand); color: var(--gray); font-size: 16px; margin-top: 18px; }
 
   /* ---------- ヒロイン攻略カード ---------- */
-  .cast { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-  .card { padding: 0; overflow: hidden; }
-  .card .head { display: grid; grid-template-columns: 120px 1fr; gap: 0; border-bottom: 2px dashed var(--steel); }
-  .card canvas { border-right: 2px dashed var(--steel); }
-  .card .who { padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
-  .card h3 { font-size: 21px; display: flex; align-items: baseline; gap: 8px; }
-  .card h3 small { font-size: 12px; color: var(--steel); font-family: var(--body); }
-  .card .job { font-family: var(--dot); font-size: 12px; color: var(--lantern); margin: 0; }
-  .stars { font-family: var(--dot); font-size: 14px; color: var(--signal); letter-spacing: .1em; }
-  .stars .off { color: #3a3d66; }
-  .card .body { padding: 16px 18px 18px; }
-  .hintlist { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; }
-  .hintlist li { font-size: 14.5px; line-height: 1.8; padding-left: 1.5em; position: relative; }
-  .hintlist li::before { content: "※"; position: absolute; left: 0; color: var(--lantern); }
-  .verdict {
-    font-family: var(--dot); font-size: 13.5px; color: var(--steel); border-top: 1px dashed var(--steel);
-    padding-top: 10px; margin: 0;
+  .cast { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .card { padding: 0; overflow: hidden; border-width: 2px; }
+  .card .head { display: grid; grid-template-columns: 112px 1fr; gap: 0; border-bottom: 2px solid var(--ink); background: #e9e0c4; }
+  .photo {
+    position: relative; border-right: 2px solid var(--ink); background: #cfd6da; overflow: hidden;
+    display: flex; align-items: flex-end; justify-content: center;
   }
-  .verdict b { color: var(--blush); font-weight: 400; }
+  .photo canvas { width: 100%; height: auto; filter: grayscale(.45) contrast(1.12) brightness(1.02); }
+  .photo::after { /* 安い印刷の網点 */
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(rgba(0,0,0,.35) 1px, transparent 1.2px) 0 0 / 3.4px 3.4px;
+    mix-blend-mode: multiply; opacity: .5; pointer-events: none;
+  }
+  .photo .cap { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.72); color: #fff; font-size: 9px; text-align: center; padding: 1px 0; letter-spacing: .05em; }
+  .card .who { padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+  .card h3 { font-size: 18px; display: flex; align-items: baseline; gap: 7px; }
+  .card h3 small { font-size: 11px; color: var(--gray); font-weight: 400; }
+  .card .job { font-size: 11.5px; color: #fff; background: var(--blue); display: inline-block; padding: 1px 8px; margin: 2px 0 0; font-weight: 700; }
+  .stars { font-size: 14px; color: var(--red); letter-spacing: .08em; font-weight: 700; }
+  .stars .off { color: #c7bc9c; }
+  .card .body { padding: 14px 16px 16px; }
   .note-tag {
-    display: inline-block; font-family: var(--dot); font-size: 11px; color: var(--ink); background: var(--lantern);
-    padding: 1px 8px; border-radius: 2px; margin-bottom: 8px;
+    display: inline-block; font-size: 11px; font-weight: 900; color: var(--ink); background: var(--yellow);
+    padding: 2px 9px; margin-bottom: 10px; transform: rotate(-1deg);
   }
+  .hintlist { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; counter-reset: pt; }
+  .hintlist li { font-size: 14px; line-height: 1.85; padding-left: 1.9em; position: relative; }
+  .hintlist li::before {
+    counter-increment: pt; content: "ポイント" counter(pt); position: absolute; left: 0; top: .05em;
+    font-size: 10px; font-weight: 900; color: #fff; background: var(--red); padding: 1px 5px; line-height: 1.5; white-space: nowrap;
+  }
+  .hintlist li.scribble { font-family: var(--hand); color: var(--redDark); font-size: 15px; background: rgba(244,201,12,.28); padding-top: 2px; padding-bottom: 2px; }
+  .hintlist li.scribble::before { content: "※編集後記"; background: transparent; color: var(--redDark); border: 1.5px solid var(--redDark); }
+  .verdict {
+    font-size: 13px; color: var(--ink); border-top: 2px dotted var(--rule);
+    padding-top: 10px; margin: 0; font-family: var(--hand);
+  }
+  .verdict b { color: var(--redDark); font-weight: 400; }
 
   /* ---------- 早見表 ---------- */
-  table.chart { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.chart th, table.chart td { border: 1px solid var(--steel); padding: 10px 12px; text-align: left; vertical-align: top; }
-  table.chart th { font-family: var(--dot); color: var(--lantern); font-weight: 400; background: rgba(248,184,0,.06); font-size: 13px; }
-  table.chart td { color: #dfe1f2; }
-  table.chart td.na { color: var(--steel); font-style: normal; }
+  table.chart { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--paper2); }
+  table.chart th, table.chart td { border: 1.5px solid var(--ink); padding: 9px 12px; text-align: left; vertical-align: top; }
+  table.chart th { color: #fff; background: var(--ink); font-weight: 700; font-size: 12.5px; }
+  table.chart td.na { color: var(--gray); font-style: italic; font-family: var(--hand); font-style: normal; }
+  table.chart tbody tr:nth-child(even) td { background: #efe6cd; }
   .chart-wrap { overflow-x: auto; }
 
-  /* ---------- 裏技 ---------- */
+  /* ---------- 裏技（読者投稿はがき風） ---------- */
   .ura { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
-  .ura li { font-size: 14.5px; line-height: 1.8; padding-left: 1.6em; position: relative; }
-  .ura li::before { content: "？"; position: absolute; left: 0; color: var(--signal); font-family: var(--dot); }
-  .ura .cred { font-family: var(--dot); color: var(--steel); font-size: 12px; display: block; margin-top: 4px; }
+  .ura li {
+    font-size: 14px; line-height: 1.85; padding: 12px 14px 10px 36px; position: relative;
+    background: var(--paper2); border: 1.5px dashed var(--ink);
+  }
+  .ura li::before { content: "？"; position: absolute; left: 11px; top: 10px; color: var(--red); font-weight: 900; font-size: 16px; }
+  .ura .cred { font-family: var(--hand); color: var(--gray); font-size: 13px; display: block; margin-top: 6px; }
 
   /* ---------- Q&A ---------- */
-  .qa { display: grid; gap: 18px; }
-  .qa dt { font-family: var(--dot); color: var(--lantern); font-size: 15px; margin-bottom: 6px; }
-  .qa dt::before { content: "Q. "; }
-  .qa dd { margin: 0; font-size: 14.5px; }
-  .qa dd::before { content: "A. "; color: var(--steel); font-family: var(--dot); }
+  .qa { display: grid; gap: 16px; }
+  .qa dt { font-weight: 900; font-size: 15px; margin-bottom: 6px; }
+  .qa dt::before { content: "Q"; color: #fff; background: var(--red); font-weight: 900; padding: 1px 8px; margin-right: 8px; }
+  .qa dd { margin: 0 0 0 0; font-size: 14px; padding-left: 30px; position: relative; }
+  .qa dd::before { content: "A"; color: var(--ink); font-weight: 900; border: 1.5px solid var(--ink); padding: 0px 7px; position: absolute; left: 0; top: 1px; font-size: 13px; }
 
-  /* ---------- 奥付・最後 ---------- */
-  .colophon { font-family: var(--dot); font-size: 12.5px; color: var(--steel); line-height: 2; }
-  .final { text-align: center; padding-block: 64px 24px; }
+  /* ---------- 最後・応募券ふうボタン ---------- */
+  .final { text-align: center; padding-block: 52px 20px; }
+  .final .box { display: inline-block; background: var(--red); border: none; color: #fff; padding: 28px 24px; }
   .final h2 { margin-bottom: 8px; }
-  .final p { margin-inline: auto; color: var(--steel); }
+  .final p { margin-inline: auto; color: #ffe9e9; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 16px; }
   .btn {
-    font-family: var(--dot); font-size: clamp(17px, 2.4vw, 20px); text-decoration: none; color: var(--paper);
-    background: var(--ink); border: 3px solid var(--paper); border-radius: 8px;
-    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper), 5px 5px 0 var(--signal);
-    padding: 13px 24px 13px 42px; position: relative; display: inline-block; transition: transform .08s steps(2);
+    font-weight: 900; font-size: clamp(15px, 2.2vw, 17px); text-decoration: none; color: var(--ink);
+    background: var(--yellow); border: 2px dashed var(--ink);
+    padding: 12px 20px; position: relative; display: inline-block;
   }
-  .btn::before { content: "▶"; position: absolute; left: 17px; color: var(--signal); animation: blink .8s steps(1) infinite; }
-  .btn:hover, .btn:focus-visible { transform: translate(-2px, -2px); color: var(--lantern); outline: none; }
-  .btn.sub { box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper); }
-  .btn.sub::before { color: var(--steel); }
-  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 14px; }
-  footer { text-align: center; color: var(--steel); font-size: 12px; padding-block: 36px 32px; font-family: var(--dot); line-height: 1.9; }
-  footer a { color: var(--lantern); text-underline-offset: 3px; }
+  .btn::before { content: "▶ "; }
+  .btn.sub { background: #fff; }
+  .btn:hover, .btn:focus-visible { outline: none; filter: brightness(.96); }
 
-  @keyframes blink { 50% { opacity: 0; } }
+  /* ---------- 奥付 ---------- */
+  footer { background: var(--ink); color: #cfc6a8; font-size: 11.5px; padding: 28px 16px 32px; line-height: 2; text-align: center; }
+  footer a { color: var(--yellow); text-underline-offset: 3px; }
+  footer .meta { display: flex; justify-content: center; gap: 2px; margin-top: 10px; }
+  footer .meta i { display: block; width: 2px; height: 20px; background: #cfc6a8; }
+
   @media (max-width: 760px) {
     .cast { grid-template-columns: 1fr; }
-    .card .head { grid-template-columns: 96px 1fr; }
+    .card .head { grid-template-columns: 88px 1fr; }
     body { font-size: 15px; }
-    section { padding-block: 44px 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .btn::before { animation: none; }
-    html { scroll-behavior: auto; }
+    section { padding-block: 36px 0; }
+    .masthead { font-size: 10px; }
   }
 </style>
 </head>
 <body>
 
 <header class="cover">
-  <canvas class="px" id="coverCv" width="192" height="128" aria-hidden="true"></canvas>
+  <div class="masthead">
+    <div class="pub">節約攻略本舗<small>SETSUYAKU KOURYAKU HONPO</small></div>
+    <div class="price">
+      定価 580円（税別）<br>特別付録・単品販売不可
+      <div class="barcode" aria-hidden="true">
+        <i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i>
+      </div>
+    </div>
+  </div>
   <div class="cover-copy">
-    <div class="kan">非公式・有志編纂</div>
+    <div class="ribbon">完全攻略……のつもり</div>
     <h1 class="booktitle">必勝攻略ガイド</h1>
     <div class="subtitle">『婚期に消ゆ』完全……のつもりだった攻略本</div>
-    <div class="stamp">攻略難易度：参考になりません</div>
+    <div class="stamp">攻略<br>難易度<br>参考に<br>なりません</div>
   </div>
 </header>
 
 <main class="wrap">
 
   <section class="foreword" aria-labelledby="h-fw">
-    <div class="win">
-      <p class="label">まえがき</p>
+    <div class="box">
+      <p class="label"><span>まえがき</span></p>
       <h2 id="h-fw">婚活に、必勝法などない。それでも、本書は作られた。</h2>
       <p>本書は『婚期に消ゆ』の攻略本として企画された。編集部は当初、各ヒロインの好感度数値、選択肢の正解・不正解、TRUE ENDへの最短ルートまで、すべてを数値化する予定だった。</p>
       <p>しかし取材を進めるうちに、編集部は気づいてしまった。好感度は、相手の気分と状況によって、同じ行動でも上下すること。「正解」に見えた選択が、半年後に効いてくること。そして何より――攻略情報を先に知ってしまうと、このゲームはいちばん面白いところが消えてしまうこと。</p>
@@ -177,13 +232,13 @@
   </section>
 
   <section id="cast" aria-labelledby="h-cast">
-    <p class="label">キャラクター攻略</p>
+    <p class="label"><span>キャラクター攻略</span></p>
     <h2 id="h-cast">5人のヒロイン、攻略情報・のようなもの</h2>
     <div class="cast">
 
-      <article class="win card" data-id="shiori" data-bg="library">
+      <article class="box card" data-id="shiori" data-bg="library">
         <div class="head">
-          <canvas class="px" width="192" height="128" aria-label="シオリ"></canvas>
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="シオリ"></canvas><span class="cap">画面写真</span></div>
           <div class="who">
             <h3>真壁シオリ <small>33歳</small></h3>
             <p class="job">区立図書館の司書</p>
@@ -202,9 +257,9 @@
         </div>
       </article>
 
-      <article class="win card" data-id="misaki" data-bg="office">
+      <article class="box card" data-id="misaki" data-bg="office">
         <div class="head">
-          <canvas class="px" width="192" height="128" aria-label="ミサキ"></canvas>
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ミサキ"></canvas><span class="cap">画面写真</span></div>
           <div class="who">
             <h3>佐倉ミサキ <small>28歳</small></h3>
             <p class="job">会社の後輩デザイナー</p>
@@ -221,9 +276,9 @@
         </div>
       </article>
 
-      <article class="win card" data-id="yui" data-bg="cafe">
+      <article class="box card" data-id="yui" data-bg="cafe">
         <div class="head">
-          <canvas class="px" width="192" height="128" aria-label="ユイ"></canvas>
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ユイ"></canvas><span class="cap">画面写真</span></div>
           <div class="who">
             <h3>七瀬ユイ <small>31歳</small></h3>
             <p class="job">駅前カフェの店員</p>
@@ -235,15 +290,15 @@
             <li>通う頻度に応じて、呼ばれ方が変わるタイミングがある。何回通えばいいかは、編集部も数えるのをやめた。</li>
             <li>将来の夢について尋ねると、会話が進展する。進展の先に何が起きるかは、本人のみぞ知る。</li>
             <li>物語の終盤、人生を変える選択を迫られる場面がある。正解・不正解はない、と編集部は信じたい。</li>
-            <li>（担当ライター注・消し忘れ）個人的には、同じ話題を100回くらい話しかけたくなるタイプの喫茶店だと思います。天気の話とか。……すみません、この一文は削除し忘れです。忘れてください。</li>
+            <li class="scribble">（担当ライター注・消し忘れ）個人的には、同じ話題を100回くらい話しかけたくなるタイプの喫茶店だと思います。天気の話とか。……すみません、この一文は削除し忘れです。忘れてください。</li>
           </ul>
           <p class="verdict">編集部評：<b>優しさに救われるか、振り回されるかは紙一重。</b>紙一重の見極め方は、本書には載っていない。</p>
         </div>
       </article>
 
-      <article class="win card" data-id="reiko" data-bg="lounge">
+      <article class="box card" data-id="reiko" data-bg="lounge">
         <div class="head">
-          <canvas class="px" width="192" height="128" aria-label="レイコ"></canvas>
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="レイコ"></canvas><span class="cap">画面写真</span></div>
           <div class="who">
             <h3>氷室レイコ <small>35歳</small></h3>
             <p class="job">外資系コンサルタント</p>
@@ -261,9 +316,9 @@
         </div>
       </article>
 
-      <article class="win card" data-id="haruka" data-bg="gym">
+      <article class="box card" data-id="haruka" data-bg="gym">
         <div class="head">
-          <canvas class="px" width="192" height="128" aria-label="ハルカ"></canvas>
+          <div class="photo"><canvas class="px" width="192" height="128" aria-label="ハルカ"></canvas><span class="cap">画面写真</span></div>
           <div class="who">
             <h3>本田ハルカ <small>26歳</small></h3>
             <p class="job">駅前ジムのトレーナー</p>
@@ -280,10 +335,10 @@
         </div>
       </article>
 
-      <article class="win card" aria-hidden="false">
-        <div class="head" style="grid-template-columns: 1fr;">
-          <div class="who" style="padding: 18px 20px;">
-            <h3>TRUE END <small>該当者・非公開</small></h3>
+      <article class="box card">
+        <div class="head" style="grid-template-columns: 1fr; background: var(--ink);">
+          <div class="who" style="padding: 16px 18px;">
+            <h3 style="color:#fff;">TRUE END <small style="color:#cfc6a8;">該当者・非公開</small></h3>
             <p class="job">たどり着いた者のみが知る</p>
           </div>
         </div>
@@ -301,8 +356,8 @@
   </section>
 
   <section id="chart" aria-labelledby="h-chart">
-    <div class="win">
-      <p class="label">必勝ルート早見表</p>
+    <div class="box">
+      <p class="label"><span>必勝ルート早見表</span></p>
       <h2 id="h-chart">一覧にすると、便利そうに見える表</h2>
       <div class="chart-wrap">
         <table class="chart">
@@ -323,8 +378,8 @@
   </section>
 
   <section id="ura" aria-labelledby="h-ura">
-    <div class="win">
-      <p class="label">裏技・小ネタ（未確認情報）</p>
+    <div class="box">
+      <p class="label"><span>裏技・小ネタ（未確認情報）</span></p>
       <h2 id="h-ura">読者から寄せられた、真偽不明の情報</h2>
       <ul class="ura">
         <li>隠しコマンドが存在するという噂がある。入力方法は分かっていない。<span class="cred">投稿者：匿名（信頼度・低）</span></li>
@@ -337,8 +392,8 @@
   </section>
 
   <section id="qa" aria-labelledby="h-qa">
-    <div class="win">
-      <p class="label">よくある質問</p>
+    <div class="box">
+      <p class="label"><span>よくある質問</span></p>
       <h2 id="h-qa">読者サポート窓口（という体裁のコーナー）</h2>
       <dl class="qa">
         <div>
@@ -362,11 +417,13 @@
   </section>
 
   <section class="final" aria-labelledby="h-final">
-    <h2 id="h-final">というわけで、あとは自分の目で確かめてほしい。</h2>
-    <p>本書が役に立たなかったとしても、それは仕様です。</p>
-    <div class="cta-row">
-      <a class="btn" href="../play/">いますぐ あそぶ</a>
-      <a class="btn sub" href="../index.html">ゲーム紹介ページへ</a>
+    <div class="box">
+      <h2 id="h-final">というわけで、あとは自分の目で確かめてほしい。</h2>
+      <p>本書が役に立たなかったとしても、それは仕様です。</p>
+      <div class="cta-row">
+        <a class="btn" href="../play/">いますぐ あそぶ</a>
+        <a class="btn sub" href="../index.html">ゲーム紹介ページへ</a>
+      </div>
     </div>
   </section>
 
@@ -377,6 +434,7 @@
   この物語はフィクションです。登場する人物・団体は、実在のものとは関係ありません。<br>
   制作：<a href="https://cf-m.jp/" target="_blank" rel="noopener">CODE FOR MARRIAGE</a>（ITエンジニア専門の結婚相談所）<br>
   © 2026 CodeForMarriage
+  <div class="meta" aria-hidden="true"><i style="width:2px"></i><i style="width:1px"></i><i style="width:3px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:1px"></i><i style="width:1px"></i><i style="width:2px"></i><i style="width:3px"></i><i style="width:1px"></i></div>
 </footer>
 
 <script>window.SPRITE_BASE = '../play/';</script>
@@ -385,15 +443,7 @@
 (function () {
   'use strict';
   const paint = (cv, fn) => { GFX.init(cv); fn(); };
-
-  const cover = document.getElementById('coverCv');
-  const drawCover = () => paint(cover, () => {
-    BG.title();
-    E(160, 20, 8, 8, C.dnavy); E(178, 58, 6, 6, C.YL); E(181, 56, 5, 5, C.dnavy);
-  });
-
   const run = () => {
-    drawCover();
     document.querySelectorAll('.card[data-id]').forEach(card => {
       const cv = card.querySelector('canvas'), id = card.dataset.id, bg = card.dataset.bg;
       paint(cv, () => GFX.draw(bg, id, 'n'));
