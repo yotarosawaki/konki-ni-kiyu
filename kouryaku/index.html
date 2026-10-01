@@ -118,18 +118,12 @@
   /* ---------- ヒロイン攻略カード ---------- */
   .cast { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
   .card { padding: 0; overflow: hidden; border-width: 2px; }
-  .card .head { display: grid; grid-template-columns: 112px 1fr; gap: 0; border-bottom: 2px solid var(--ink); background: #e9e0c4; }
+  .card .head { display: grid; grid-template-columns: 112px 1fr; gap: 0; border-bottom: 2px solid var(--ink); background: #e9e0c4; align-items: start; }
   .photo {
-    position: relative; border-right: 2px solid var(--ink); background: #cfd6da; overflow: hidden;
-    display: flex; align-items: flex-end; justify-content: center;
+    position: relative; border-right: 2px solid var(--ink); background: #cfd6da; overflow: hidden; line-height: 0;
   }
-  .photo canvas { width: 100%; height: auto; filter: grayscale(.45) contrast(1.12) brightness(1.02); }
-  .photo::after { /* 安い印刷の網点 */
-    content: ""; position: absolute; inset: 0;
-    background: radial-gradient(rgba(0,0,0,.35) 1px, transparent 1.2px) 0 0 / 3.4px 3.4px;
-    mix-blend-mode: multiply; opacity: .5; pointer-events: none;
-  }
-  .photo .cap { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.72); color: #fff; font-size: 9px; text-align: center; padding: 1px 0; letter-spacing: .05em; }
+  .photo canvas { display: block; width: 100%; height: auto; filter: grayscale(.3) contrast(1.08) brightness(1.02); }
+  .photo .cap { position: relative; display: block; background: rgba(0,0,0,.72); color: #fff; font-size: 9px; text-align: center; padding: 1px 0; letter-spacing: .05em; line-height: 1.6; }
   .card .who { padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
   .card h3 { font-size: 18px; display: flex; align-items: baseline; gap: 7px; }
   .card h3 small { font-size: 11px; color: var(--gray); font-weight: 400; }
@@ -451,6 +445,7 @@
   <section id="side" aria-labelledby="h-side">
     <p class="label"><span>脇を固める面々</span></p>
     <h2 id="h-side">攻略対象ではない。が、無視できない9人</h2>
+    <p class="flow-note" style="margin-top:-8px;">……ここは本当に、攻略できないのだろうか？</p>
     <div class="side-cast">
 
       <article class="box side" data-id="yasu" data-bg="office">
