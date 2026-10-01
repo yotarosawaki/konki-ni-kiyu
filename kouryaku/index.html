@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<base target="_top">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>必勝攻略ガイド（非公式）｜婚期に消ゆ</title>
+<meta name="description" content="『婚期に消ゆ』非公式攻略ガイド。5人のヒロインの攻略情報……のようなもの。結局は、自分の目で確かめてほしい。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="必勝攻略ガイド（非公式）｜婚期に消ゆ">
+<meta property="og:description" content="攻略情報、載ってます。役に立つかは別です。">
+<meta property="og:url" content="https://konki.cf-m.jp/kouryaku/">
+<meta property="og:image" content="https://konki.cf-m.jp/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --night: #0b0c2c;
+    --ink: #05051a;
+    --paper: #fcfcfc;
+    --lantern: #f8b800;
+    --signal: #f83800;
+    --blush: #f878f8;
+    --steel: #a3a8cc;
+    --dot: "DotGothic16", "MS Gothic", monospace;
+    --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--night); color: var(--paper);
+    font-family: var(--body); font-size: 16px; line-height: 1.9;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 980px; margin: 0 auto; padding-inline: 16px; }
+  canvas.px { display: block; width: 100%; max-width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+  .win {
+    background: var(--ink); border: 3px solid var(--paper); border-radius: 8px;
+    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper);
+    padding: 22px 24px; position: relative;
+  }
+  .label { font-family: var(--dot); color: var(--lantern); letter-spacing: .12em; font-size: 14px; margin: 0 0 6px; }
+  h1, h2, h3, p, li { word-break: auto-phrase; }
+  h2 { font-family: var(--dot); font-weight: 400; font-size: clamp(24px, 4.2vw, 36px); line-height: 1.35; margin: 0 0 16px; text-wrap: balance; }
+  h3 { font-family: var(--dot); font-weight: 400; font-size: 20px; margin: 0; }
+  p { margin: 0 0 1em; max-width: 42em; }
+  section { padding-block: 56px 0; }
+
+  /* ---------- ヘッダー：表紙 ---------- */
+  .cover { position: relative; background: var(--ink); border-bottom: 4px solid var(--paper); overflow: hidden; }
+  .cover canvas { width: 100%; aspect-ratio: 3 / 2; max-height: 70vh; object-fit: cover; }
+  .cover-copy {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: clamp(20px, 6vw, 56px) 16px 16px; text-align: center; gap: 8px;
+  }
+  .kan { font-family: var(--dot); font-size: clamp(12px, 2vw, 14px); color: var(--lantern); background: rgba(5,5,26,.82); padding: 3px 12px; letter-spacing: .2em; }
+  .booktitle {
+    font-family: var(--dot); font-weight: 400; margin: 6px 0 0; line-height: 1.15;
+    font-size: clamp(34px, 7.4vw, 60px); letter-spacing: .03em;
+    text-shadow: 3px 3px 0 var(--signal), 6px 6px 0 var(--ink);
+  }
+  .subtitle { font-family: var(--dot); font-size: clamp(14px, 2.2vw, 18px); background: rgba(5,5,26,.82); padding: 6px 14px; margin-top: 10px; color: var(--paper); }
+  .stamp {
+    font-family: var(--dot); font-size: clamp(12px, 1.8vw, 14px); color: var(--signal); border: 2px solid var(--signal);
+    padding: 4px 10px; margin-top: 14px; background: rgba(5,5,26,.82); transform: rotate(-3deg); display: inline-block;
+  }
+
+  /* ---------- 前書き ---------- */
+  .foreword p { max-width: 100%; }
+  .foreword .sign { text-align: right; font-family: var(--dot); color: var(--steel); font-size: 14px; margin-top: 18px; }
+
+  /* ---------- ヒロイン攻略カード ---------- */
+  .cast { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .card { padding: 0; overflow: hidden; }
+  .card .head { display: grid; grid-template-columns: 120px 1fr; gap: 0; border-bottom: 2px dashed var(--steel); }
+  .card canvas { border-right: 2px dashed var(--steel); }
+  .card .who { padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+  .card h3 { font-size: 21px; display: flex; align-items: baseline; gap: 8px; }
+  .card h3 small { font-size: 12px; color: var(--steel); font-family: var(--body); }
+  .card .job { font-family: var(--dot); font-size: 12px; color: var(--lantern); margin: 0; }
+  .stars { font-family: var(--dot); font-size: 14px; color: var(--signal); letter-spacing: .1em; }
+  .stars .off { color: #3a3d66; }
+  .card .body { padding: 16px 18px 18px; }
+  .hintlist { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; }
+  .hintlist li { font-size: 14.5px; line-height: 1.8; padding-left: 1.5em; position: relative; }
+  .hintlist li::before { content: "※"; position: absolute; left: 0; color: var(--lantern); }
+  .verdict {
+    font-family: var(--dot); font-size: 13.5px; color: var(--steel); border-top: 1px dashed var(--steel);
+    padding-top: 10px; margin: 0;
+  }
+  .verdict b { color: var(--blush); font-weight: 400; }
+  .note-tag {
+    display: inline-block; font-family: var(--dot); font-size: 11px; color: var(--ink); background: var(--lantern);
+    padding: 1px 8px; border-radius: 2px; margin-bottom: 8px;
+  }
+
+  /* ---------- 早見表 ---------- */
+  table.chart { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.chart th, table.chart td { border: 1px solid var(--steel); padding: 10px 12px; text-align: left; vertical-align: top; }
+  table.chart th { font-family: var(--dot); color: var(--lantern); font-weight: 400; background: rgba(248,184,0,.06); font-size: 13px; }
+  table.chart td { color: #dfe1f2; }
+  table.chart td.na { color: var(--steel); font-style: normal; }
+  .chart-wrap { overflow-x: auto; }
+
+  /* ---------- 裏技 ---------- */
+  .ura { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+  .ura li { font-size: 14.5px; line-height: 1.8; padding-left: 1.6em; position: relative; }
+  .ura li::before { content: "？"; position: absolute; left: 0; color: var(--signal); font-family: var(--dot); }
+  .ura .cred { font-family: var(--dot); color: var(--steel); font-size: 12px; display: block; margin-top: 4px; }
+
+  /* ---------- Q&A ---------- */
+  .qa { display: grid; gap: 18px; }
+  .qa dt { font-family: var(--dot); color: var(--lantern); font-size: 15px; margin-bottom: 6px; }
+  .qa dt::before { content: "Q. "; }
+  .qa dd { margin: 0; font-size: 14.5px; }
+  .qa dd::before { content: "A. "; color: var(--steel); font-family: var(--dot); }
+
+  /* ---------- 奥付・最後 ---------- */
+  .colophon { font-family: var(--dot); font-size: 12.5px; color: var(--steel); line-height: 2; }
+  .final { text-align: center; padding-block: 64px 24px; }
+  .final h2 { margin-bottom: 8px; }
+  .final p { margin-inline: auto; color: var(--steel); }
+  .btn {
+    font-family: var(--dot); font-size: clamp(17px, 2.4vw, 20px); text-decoration: none; color: var(--paper);
+    background: var(--ink); border: 3px solid var(--paper); border-radius: 8px;
+    box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper), 5px 5px 0 var(--signal);
+    padding: 13px 24px 13px 42px; position: relative; display: inline-block; transition: transform .08s steps(2);
+  }
+  .btn::before { content: "▶"; position: absolute; left: 17px; color: var(--signal); animation: blink .8s steps(1) infinite; }
+  .btn:hover, .btn:focus-visible { transform: translate(-2px, -2px); color: var(--lantern); outline: none; }
+  .btn.sub { box-shadow: inset 0 0 0 3px var(--ink), inset 0 0 0 5px var(--paper); }
+  .btn.sub::before { color: var(--steel); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 14px; }
+  footer { text-align: center; color: var(--steel); font-size: 12px; padding-block: 36px 32px; font-family: var(--dot); line-height: 1.9; }
+  footer a { color: var(--lantern); text-underline-offset: 3px; }
+
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (max-width: 760px) {
+    .cast { grid-template-columns: 1fr; }
+    .card .head { grid-template-columns: 96px 1fr; }
+    body { font-size: 15px; }
+    section { padding-block: 44px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn::before { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <canvas class="px" id="coverCv" width="192" height="128" aria-hidden="true"></canvas>
+  <div class="cover-copy">
+    <div class="kan">非公式・有志編纂</div>
+    <h1 class="booktitle">必勝攻略ガイド</h1>
+    <div class="subtitle">『婚期に消ゆ』完全……のつもりだった攻略本</div>
+    <div class="stamp">攻略難易度：参考になりません</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="foreword" aria-labelledby="h-fw">
+    <div class="win">
+      <p class="label">まえがき</p>
+      <h2 id="h-fw">婚活に、必勝法などない。それでも、本書は作られた。</h2>
+      <p>本書は『婚期に消ゆ』の攻略本として企画された。編集部は当初、各ヒロインの好感度数値、選択肢の正解・不正解、TRUE ENDへの最短ルートまで、すべてを数値化する予定だった。</p>
+      <p>しかし取材を進めるうちに、編集部は気づいてしまった。好感度は、相手の気分と状況によって、同じ行動でも上下すること。「正解」に見えた選択が、半年後に効いてくること。そして何より――攻略情報を先に知ってしまうと、このゲームはいちばん面白いところが消えてしまうこと。</p>
+      <p>というわけで、本書に載っているのは「ヒント」である。読めば何かが分かった気になるが、実際のプレイには、たぶんそれほど役に立たない。それでいいと、編集部は開き直ることにした。</p>
+      <p class="sign">――攻略班（解散済み）</p>
+    </div>
+  </section>
+
+  <section id="cast" aria-labelledby="h-cast">
+    <p class="label">キャラクター攻略</p>
+    <h2 id="h-cast">5人のヒロイン、攻略情報・のようなもの</h2>
+    <div class="cast">
+
+      <article class="win card" data-id="shiori" data-bg="library">
+        <div class="head">
+          <canvas class="px" width="192" height="128" aria-label="シオリ"></canvas>
+          <div class="who">
+            <h3>真壁シオリ <small>33歳</small></h3>
+            <p class="job">区立図書館の司書</p>
+            <p class="stars">難易度　★★★★<span class="off">★</span></p>
+          </div>
+        </div>
+        <div class="body">
+          <span class="note-tag">本命ヒロイン</span>
+          <ul class="hintlist">
+            <li>本の話を振ると、少しだけ心を開く。どんな本を、どう振るかは、本書では触れない。</li>
+            <li>彼女が大事にしている"小さなもの"に気づけるかどうかが、分かれ道になるらしい。何に気づけばいいかは、画面をよく見てほしい。</li>
+            <li>連絡先を聞くタイミングには、早すぎず遅すぎずの頃合いがある……という噂がある。何回目の会話かは、各自の記録を参照のこと（記録は取っていない）。</li>
+            <li>会話の選択肢の中に、聞くと空気が変わるものが一つ混ざっている。どれかは、聞いてみれば分かる。</li>
+          </ul>
+          <p class="verdict">編集部評：<b>無口なぶん、何を考えているか本当に分からない。</b>一番ヒントが少ないのに、一番聞かれる。</p>
+        </div>
+      </article>
+
+      <article class="win card" data-id="misaki" data-bg="office">
+        <div class="head">
+          <canvas class="px" width="192" height="128" aria-label="ミサキ"></canvas>
+          <div class="who">
+            <h3>佐倉ミサキ <small>28歳</small></h3>
+            <p class="job">会社の後輩デザイナー</p>
+            <p class="stars">難易度　★★<span class="off">★★★</span></p>
+          </div>
+        </div>
+        <div class="body">
+          <ul class="hintlist">
+            <li>誰にでも明るい。それは長所であり、攻略情報としては、あまり当てにならない。</li>
+            <li>「先輩みたいな人と結婚する人は幸せ」と言われたら、その言葉をどう受け取るかは、プレイヤーの経験値に委ねられる。</li>
+            <li>彼女に深入りするルートが存在する。進んだ先にある景色について、編集部はノーコメントを貫く。</li>
+          </ul>
+          <p class="verdict">編集部評：<b>とっつきやすい。だからこそ、足元をすくわれる。</b></p>
+        </div>
+      </article>
+
+      <article class="win card" data-id="yui" data-bg="cafe">
+        <div class="head">
+          <canvas class="px" width="192" height="128" aria-label="ユイ"></canvas>
+          <div class="who">
+            <h3>七瀬ユイ <small>31歳</small></h3>
+            <p class="job">駅前カフェの店員</p>
+            <p class="stars">難易度　★★★<span class="off">★★</span></p>
+          </div>
+        </div>
+        <div class="body">
+          <ul class="hintlist">
+            <li>通う頻度に応じて、呼ばれ方が変わるタイミングがある。何回通えばいいかは、編集部も数えるのをやめた。</li>
+            <li>将来の夢について尋ねると、会話が進展する。進展の先に何が起きるかは、本人のみぞ知る。</li>
+            <li>物語の終盤、人生を変える選択を迫られる場面がある。正解・不正解はない、と編集部は信じたい。</li>
+          </ul>
+          <p class="verdict">編集部評：<b>優しさに救われるか、振り回されるかは紙一重。</b>紙一重の見極め方は、本書には載っていない。</p>
+        </div>
+      </article>
+
+      <article class="win card" data-id="reiko" data-bg="lounge">
+        <div class="head">
+          <canvas class="px" width="192" height="128" aria-label="レイコ"></canvas>
+          <div class="who">
+            <h3>氷室レイコ <small>35歳</small></h3>
+            <p class="job">外資系コンサルタント</p>
+            <p class="stars">難易度　★★★★★</p>
+          </div>
+        </div>
+        <div class="body">
+          <ul class="hintlist">
+            <li>初対面から、会話が面接のように進む。これは演出ではなく仕様である。面接のつもりで臨むこと。</li>
+            <li>正直さが評価される質問と、されない質問がある。見分け方は、彼女の表情に出る……かもしれない。</li>
+            <li>自分を大きく見せる選択肢がある。選んだ場合、後の展開に影響するらしいが、どう影響するかは体験してほしい。</li>
+            <li>家事について聞かれる場面で、ある家電の名前を挙げると、珍しく彼女の反応が変わる。製品名はここでは伏せる。</li>
+          </ul>
+          <p class="verdict">編集部評：<b>攻略情報が一番少ないのに、一番攻略情報が欲しくなる相手。</b></p>
+        </div>
+      </article>
+
+      <article class="win card" data-id="haruka" data-bg="gym">
+        <div class="head">
+          <canvas class="px" width="192" height="128" aria-label="ハルカ"></canvas>
+          <div class="who">
+            <h3>本田ハルカ <small>26歳</small></h3>
+            <p class="job">駅前ジムのトレーナー</p>
+            <p class="stars">難易度　★★★<span class="off">★★</span></p>
+          </div>
+        </div>
+        <div class="body">
+          <ul class="hintlist">
+            <li>誘いのテンポが、終始やや速い。速さそのものに意味があるかどうかは、プレイヤーの判断に委ねる。</li>
+            <li>施設内の掲示物は、できれば全部読んでおくことを推奨する。読まなくても話は進む。</li>
+            <li>ある単語が会話に登場したら、一度立ち止まって深呼吸することを強く勧める。単語そのものは、出てきたときに分かる。</li>
+          </ul>
+          <p class="verdict">編集部評：<b>明るさに引っ張られて、気づいたら手遅れ、になりがち。</b>手遅れの定義は人による。</p>
+        </div>
+      </article>
+
+      <article class="win card" aria-hidden="false">
+        <div class="head" style="grid-template-columns: 1fr;">
+          <div class="who" style="padding: 18px 20px;">
+            <h3>TRUE END <small>該当者・非公開</small></h3>
+            <p class="job">たどり着いた者のみが知る</p>
+          </div>
+        </div>
+        <div class="body">
+          <ul class="hintlist">
+            <li>ある一人のヒロインと、特定の行動を根気よく積み重ねると、エンディングは一つだけ分岐する……らしい。</li>
+            <li>編集部内でも、到達報告は片手で足りる人数しかない。到達者は一様に「攻略情報なんて読まなくてよかった」と言う。</li>
+            <li>その一言を信じるかどうかも、本書は関知しない。</li>
+          </ul>
+          <p class="verdict">編集部評：<b>載せられる情報が、本当に何もない。</b></p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="chart" aria-labelledby="h-chart">
+    <div class="win">
+      <p class="label">必勝ルート早見表</p>
+      <h2 id="h-chart">一覧にすると、便利そうに見える表</h2>
+      <div class="chart-wrap">
+        <table class="chart">
+          <thead>
+            <tr><th>相手</th><th>好感度の上げ方</th><th>注意点</th><th>TRUE ENDへの鍵</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>シオリ</td><td class="na">本人に聞いてください</td><td class="na">察してください</td><td class="na">非公開</td></tr>
+            <tr><td>ミサキ</td><td class="na">鋭意調査中</td><td class="na">深入り注意（詳細不明）</td><td class="na">—</td></tr>
+            <tr><td>ユイ</td><td class="na">夢の話、らしい</td><td class="na">終盤に大きな分岐あり</td><td class="na">—</td></tr>
+            <tr><td>レイコ</td><td class="na">面接だと思ってください</td><td class="na">話を盛らない</td><td class="na">—</td></tr>
+            <tr><td>ハルカ</td><td class="na">たぶん違う</td><td class="na">ある単語に注意</td><td class="na">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="verdict" style="margin-top: 14px;">編集部より：表にすると情報量があるように見えるが、中身はほぼ「本編を見てください」である。校了直前にこの事実に気づいたが、表自体は見栄えが良いので掲載した。</p>
+    </div>
+  </section>
+
+  <section id="ura" aria-labelledby="h-ura">
+    <div class="win">
+      <p class="label">裏技・小ネタ（未確認情報）</p>
+      <h2 id="h-ura">読者から寄せられた、真偽不明の情報</h2>
+      <ul class="ura">
+        <li>隠しコマンドが存在するという噂がある。入力方法は分かっていない。<span class="cred">投稿者：匿名（信頼度・低）</span></li>
+        <li>同じ話題を7回選ぶと、何かが起きるらしい。6回で諦めた人が大半のため、未検証。<span class="cred">投稿者：かわさき在住エンジニア（信頼度・不明）</span></li>
+        <li>タイトル画面で何もせず待っていると、何か起きる……という説がある。編集部は30分待って、何も起きなかった。<span class="cred">編集部実測・不成立</span></li>
+        <li>特定のセリフを見た直後にブラウザをリロードすると得する、という都市伝説がある。損することもある、とも言われている。<span class="cred">投稿者：複数（内容が食い違う）</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="qa" aria-labelledby="h-qa">
+    <div class="win">
+      <p class="label">よくある質問</p>
+      <h2 id="h-qa">読者サポート窓口（という体裁のコーナー）</h2>
+      <dl class="qa">
+        <div>
+          <dt>結局、誰を狙えばいいですか？</dt>
+          <dd>本書では推奨しません。本編をプレイした上で、ご自身で決めてください。</dd>
+        </div>
+        <div>
+          <dt>バッドエンドにばかりなります。攻略法を教えてください。</dt>
+          <dd>このゲームのバッドエンド率は、公開データによれば相当に高いです。あなただけではありません。元気を出してください。</dd>
+        </div>
+        <div>
+          <dt>このヒントだけで本当にクリアできますか？</dt>
+          <dd>できる人もいれば、できない人もいます。編集部にも両方のタイプがいました。</dd>
+        </div>
+        <div>
+          <dt>続編の攻略本は出ますか？</dt>
+          <dd>攻略班が解散しているため、未定です。有志を募集しています（無給）。</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="final" aria-labelledby="h-final">
+    <h2 id="h-final">というわけで、あとは自分の目で確かめてほしい。</h2>
+    <p>本書が役に立たなかったとしても、それは仕様です。</p>
+    <div class="cta-row">
+      <a class="btn" href="../play/">いますぐ あそぶ</a>
+      <a class="btn sub" href="../index.html">ゲーム紹介ページへ</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  本書に記載の情報は、攻略の成功を保証するものではありません。内容は編集部の独自取材（主に想像）に基づきます。<br>
+  この物語はフィクションです。登場する人物・団体は、実在のものとは関係ありません。<br>
+  制作：<a href="https://cf-m.jp/" target="_blank" rel="noopener">CODE FOR MARRIAGE</a>（ITエンジニア専門の結婚相談所）<br>
+  © 2026 CodeForMarriage
+</footer>
+
+<script>window.SPRITE_BASE = '../play/';</script>
+<script src="../play/js/gfx.js"></script>
+<script>
+(function () {
+  'use strict';
+  const paint = (cv, fn) => { GFX.init(cv); fn(); };
+
+  const cover = document.getElementById('coverCv');
+  const drawCover = () => paint(cover, () => {
+    BG.title();
+    E(160, 20, 8, 8, C.dnavy); E(178, 58, 6, 6, C.YL); E(181, 56, 5, 5, C.dnavy);
+  });
+
+  const run = () => {
+    drawCover();
+    document.querySelectorAll('.card[data-id]').forEach(card => {
+      const cv = card.querySelector('canvas'), id = card.dataset.id, bg = card.dataset.bg;
+      paint(cv, () => GFX.draw(bg, id, 'n'));
+    });
+  };
+  Promise.all([document.fonts ? document.fonts.ready : 0, loadSprites()]).then(run, run);
+})();
+</script>
+</body>
+</html>
