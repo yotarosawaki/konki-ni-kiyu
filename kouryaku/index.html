@@ -130,14 +130,14 @@
     display: inline-block; font-size: 11px; font-weight: 900; color: var(--ink); background: var(--yellow);
     padding: 2px 9px; margin-bottom: 10px; transform: rotate(-1deg);
   }
-  .hintlist { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 10px; counter-reset: pt; }
-  .hintlist li { font-size: 14px; line-height: 1.85; padding-left: 1.9em; position: relative; }
+  .hintlist { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 12px; counter-reset: pt; }
+  .hintlist li { font-size: 14px; line-height: 1.85; padding-left: 82px; position: relative; min-height: 1.6em; }
   .hintlist li::before {
-    counter-increment: pt; content: "ポイント" counter(pt); position: absolute; left: 0; top: .05em;
-    font-size: 10px; font-weight: 900; color: #fff; background: var(--red); padding: 1px 5px; line-height: 1.5; white-space: nowrap;
+    counter-increment: pt; content: "ポイント" counter(pt); position: absolute; left: 0; top: .15em;
+    font-size: 10px; font-weight: 900; color: #fff; background: var(--red); padding: 2px 7px; line-height: 1.6; white-space: nowrap;
   }
-  .hintlist li.scribble { font-family: var(--hand); color: var(--redDark); font-size: 15px; background: rgba(244,201,12,.28); padding-top: 2px; padding-bottom: 2px; }
-  .hintlist li.scribble::before { content: "※編集後記"; background: transparent; color: var(--redDark); border: 1.5px solid var(--redDark); }
+  .hintlist li.scribble { font-family: var(--hand); color: var(--redDark); font-size: 15px; background: rgba(244,201,12,.28); padding-top: 6px; padding-bottom: 6px; padding-left: 92px; }
+  .hintlist li.scribble::before { content: "※編集後記"; background: transparent; color: var(--redDark); border: 1.5px solid var(--redDark); top: 6px; }
   .verdict {
     font-size: 13px; color: var(--ink); border-top: 2px dotted var(--rule);
     padding-top: 10px; margin: 0; font-family: var(--hand);
