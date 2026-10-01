@@ -136,7 +136,7 @@
     counter-increment: pt; content: "ポイント" counter(pt); position: absolute; left: 0; top: .15em;
     font-size: 10px; font-weight: 900; color: #fff; background: var(--red); padding: 2px 7px; line-height: 1.6; white-space: nowrap;
   }
-  .hintlist li.scribble { font-family: var(--hand); color: var(--redDark); font-size: 15px; background: rgba(244,201,12,.28); padding-top: 6px; padding-bottom: 6px; padding-left: 92px; }
+  .hintlist li.scribble { font-family: var(--hand); color: var(--redDark); font-size: 15px; background: rgba(244,201,12,.28); padding-top: 6px; padding-bottom: 6px; padding-left: 104px; }
   .hintlist li.scribble::before { content: "※編集後記"; background: transparent; color: var(--redDark); border: 1.5px solid var(--redDark); top: 6px; }
   .verdict {
     font-size: 13px; color: var(--ink); border-top: 2px dotted var(--rule);
@@ -147,6 +147,7 @@
   /* ---------- 早見表 ---------- */
   table.chart { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--paper2); }
   table.chart th, table.chart td { border: 1.5px solid var(--ink); padding: 9px 12px; text-align: left; vertical-align: top; }
+  table.chart td:first-child { white-space: nowrap; font-weight: 700; }
   table.chart th { color: #fff; background: var(--ink); font-weight: 700; font-size: 12.5px; }
   table.chart td.na { color: var(--gray); font-style: italic; font-family: var(--hand); font-style: normal; }
   table.chart tbody tr:nth-child(even) td { background: #efe6cd; }
